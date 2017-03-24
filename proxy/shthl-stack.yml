@@ -1,6 +1,6 @@
 version: 1
 shathel-stack:
-  gav: org.s4s0l.shathel:shathel-stack-proxy:$version
+  gav: git@github.com/s4s0l/shathel-stacks:proxy:$version
   deployName: proxy
   enrichers:
     addNetwork:
@@ -15,7 +15,7 @@ shathel-stack:
                   if(disabledMonitoring && monitoringProxy){
                       LOGGER.info("Disabled proxy for service ${stack.name} as SHATHEL_PROXY_DISABLE_MONITORING=false")
                       it.deploy.labels['com.df.notify'] = 'false'
-                      def selfReference = new org.s4s0l.shathel.commons.core.stack.StackReference("org.s4s0l.shathel:shathel-stack-proxy:any")
+                      def selfReference = new org.s4s0l.shathel.commons.core.stack.StackReference("git@github.com/s4s0l/shathel-stacks:proxy:any")
                       stack.dependencies.find {it.stackReference.isSameStack(selfReference)}.envs.keySet().each {
                           env.remove(it)
                       }
