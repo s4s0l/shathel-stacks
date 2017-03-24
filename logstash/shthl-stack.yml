@@ -1,7 +1,7 @@
 version: 1
 shathel-stack:
-  gav: org.s4s0l.shathel:shathel-stack-logforwardl:$version
-  deployName: logforwardl
+  gav: git@github.com/s4s0l/shathel-stacks:logstash:$version
+  deployName: logstash
 
   enrichers:
       logDriver:
@@ -18,5 +18,5 @@ shathel-stack:
                     ]
           }
   dependencies:
-      org.s4s0l.shathel:shathel-stack-logstore:$version:
+      git@github.com/s4s0l/shathel-stacks:logstore:$version:
 
