@@ -14,14 +14,16 @@ services:
       - CONNECTION_MODE=http-keep-alive
     deploy:
       update_config:
-        delay: 300s
+        delay: 15s
       replicas: 2
     secrets:
       - source: shathel_dfp_users_monitoring
         target: dfp_users_monitoring
 
   swarm-listener:
-    image: vfarcic/docker-flow-swarm-listener
+    image: sasol/docker-flow-swarm-listener:beta
+    ports:
+      - 9999:8080
     networks:
       - network
     volumes:
