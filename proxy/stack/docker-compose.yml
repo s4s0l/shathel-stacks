@@ -1,7 +1,7 @@
 version: "3.1"
 services:
   proxy:
-    image: sasol/docker-flow-proxy:beta
+    image: vfarcic/docker-flow-proxy:1.299
     ports:
       - 8080:8080
       - ${SHATHEL_PROXY_PORT_HTTP:-80}:80
@@ -21,7 +21,7 @@ services:
         target: dfp_users_monitoring
 
   swarm-listener:
-    image: sasol/docker-flow-swarm-listener:beta
+    image: vfarcic/docker-flow-swarm-listener:1.32
     ports:
       - 9999:8080
     networks:

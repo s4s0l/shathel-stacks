@@ -1,0 +1,19 @@
+version: "3"
+services:
+  hello2:
+    build: ./hello
+    ports:
+      - 53455:80
+  hello1:
+    image: tutum/hello-world
+    ports:
+      - 53456:80
+    deploy:
+      labels:
+          com.df.notify: "true"
+          com.df.distribute: "true"
+          com.df.usersSecret: "monitoring"
+          com.df.servicePath: "/verifier/"
+          com.df.reqPathReplace: /
+          com.df.reqPathSearch: /verifier/
+          com.df.port: "80"

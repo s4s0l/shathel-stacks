@@ -4,6 +4,6 @@ shathel-stack:
   deployName: 00shathel
   enrichers:
       addNetwork:
-        target: ALL
+        target: DEPS
         inline: >
           compose.addExternalNetworkAndAttachAllServices("00shathel_network")

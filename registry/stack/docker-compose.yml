@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  shathel-docker-registry:
+    image: registry:2.5
+    ports:
+      - 4000:5000
+    environment:
+      REGISTRY_HTTP_TLS_CERTIFICATE: /certs/registry.crt
+      REGISTRY_HTTP_TLS_KEY: /certs/registry.key
+    volumes:
+      - shathel-docker-registry-data:/var/lib/registry
+      - ./certs:/certs
+    deploy:
+      placement:
+              constraints: [node.role == manager]
+
+volumes:
+  shathel-docker-registry-data:

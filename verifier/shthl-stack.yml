@@ -1,0 +1,28 @@
+version: 1
+shathel-stack:
+  gav: git@github.com/s4s0l/shathel-stacks:verifier:$version
+  deployName: verifier
+  dependencies:
+    git@github.com/s4s0l/shathel-stacks:proxy:$version:
+    git@github.com/s4s0l/shathel-stacks:registry:$version:
+  enrichers:
+    file:
+        target: ALL
+    sample-inline:
+        target: ALL
+        inline: |
+            log.info("Test Logging from inline")
+  pre-provisioners:
+    test:
+      type: groovy
+    sample-inline:
+      target: ALL
+      inline: |
+          log.info("Test Logging from inline - pre provisioner")
+  post-provisioners:
+    test:
+        type: groovy
+    sample-inline:
+      target: ALL
+      inline: |
+          log.info("Test Logging from inline - post provisioner")

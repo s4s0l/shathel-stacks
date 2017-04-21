@@ -25,55 +25,16 @@ ExecutableApiFacade apii = api;
 StackCommand stackCommand = command;
 HttpApis httpApi = http
 
-String ip = apii.getIpForManagementNode();
-int portainerPort = 9001
-String adminPassword = "qwerty"
-def address = "http://${ip}:${portainerPort}"
+
+
+def address = "http://${api.openPublishedPort(9001)}"
 log("Waiting for connection")
 def portainer = httpApi.waitAndGetClient(address)
-def AUTH_ON = false
-def HEADERS = [:]
 log "Checking if already initialized"
-
-if (AUTH_ON) {
-    HttpResponseDecorator result = portainer.post([
-            requestContentType: JSON,
-            contentType       : JSON,
-            path              : '/api/auth',
-            body              : [username: "admin", password: adminPassword]]
-
-    )
-    if (result.status != 200) {
-        log "Initiating password"
-
-        result = portainer.post(
-                requestContentType: JSON,
-                contentType: JSON,
-                path: '/api/users/admin/init',
-                body: [password: adminPassword]
-        )
-        assert result.status == 200
-
-    }
-    log "Getting token"
-
-    result = portainer.post(
-            requestContentType: JSON,
-            contentType: JSON,
-            path: '/api/auth',
-            body: [username: "admin", password: adminPassword]
-    )
-    assert result.status == 200
-
-
-    def token = result.data.jwt;
-    HEADERS = [Authorization: "Bearer $token"]
-}
 
 result = portainer.get(
         contentType: JSON,
         path: '/api/endpoints',
-        headers: HEADERS,
 )
 
 def nodesDefined = result.data.collect { it.Name }
@@ -87,25 +48,25 @@ portainer.encoder.'multipart/form-data' = {
         e
 }
 
-apii.getNodeNames()
-        .findAll { !nodesDefined.contains(it) }
+apii.nodes
+        .findAll { !nodesDefined.contains(it.nodeName) }
         .each {
 
-    def machineName = it
-    def envs = apii.getDockerEnvs(machineName)
+    def machineName = it.nodeName
+    def envs = apii.getDockerEnvs(it)
     def certPath = envs['DOCKER_CERT_PATH']
     def machineIp = envs['DOCKER_HOST']
     if (machineIp == null) {
         return;
     }
     def tls = !StringUtils.isEmpty(certPath)
+    machineIp = "tcp://${it.privateIp}:${tls ? 2376 : 2375}".toString()
     log "Adding $machineName as endpoint"
     result = portainer.post(
             requestContentType: JSON,
             contentType: JSON,
             query: [active: false],
             path: '/api/endpoints',
-            headers: HEADERS,
             body: [Name: machineName, URL: machineIp, TLS: tls]
     )
     assert result.status == 200
@@ -117,7 +78,6 @@ apii.getNodeNames()
                     requestContentType: 'multipart/form-data',
                     contentType: JSON,
                     path: "/api/upload/tls/$endpointId/$fileName",
-                    headers: HEADERS,
                     body: new File(certPath, "${fileName}.pem"),
             )
             assert result.status == 200

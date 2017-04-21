@@ -10,7 +10,6 @@ services:
 #      - consul-data:/consul/data
     hostname: '{{.Node.ID}}-consul'
     environment:
-      - 'asfsadf=asdfsdf'
       - "CONSUL_BIND_INTERFACE=eth0"
       - 'CONSUL_LOCAL_CONFIG={"leave_on_terminate": true, "skip_leave_on_interrupt": false}'
     command: agent   -server -ui -client=0.0.0.0 -bootstrap-expect=${SHATHEL_ENV_QUORUM:-1} -retry-join=tasks.consul

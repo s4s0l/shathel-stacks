@@ -1,0 +1,11 @@
+version: 1
+shathel-stack:
+  gav: git@github.com/s4s0l/shathel-stacks:verifier-root:$version
+  deployName: verifier-root
+  dependencies:
+    git@github.com/s4s0l/shathel-stacks:proxy:$version:
+    git@github.com/s4s0l/shathel-stacks:registry:$version:
+    git@github.com/s4s0l/shathel-stacks:portainer:$version:
+    git@github.com/s4s0l/shathel-stacks:consul:$version:
+    git@github.com/s4s0l/shathel-stacks:monitoring:$version:
+    git@github.com/s4s0l/shathel-stacks:verifier:$version:

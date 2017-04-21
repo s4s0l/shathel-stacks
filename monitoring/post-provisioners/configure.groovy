@@ -17,33 +17,13 @@ import org.apache.http.entity.mime.content.FileBody
 import org.s4s0l.shathel.commons.core.environment.ExecutableApiFacade
 import org.s4s0l.shathel.commons.scripts.HttpApis
 
-ExecutableApiFacade apii = api;
-Map<String,String> envs = env
-HttpApis httpApi = http
-String ip = apii.getIpForManagementNode();
-int portainerPort = 3000
-def address = "http://${ip}:${portainerPort}"
+def address = "http://${api.openPublishedPort(3000)}"
 def log(String x) {
     LOGGER.info("-----grafana:" + x);
 }
 log("Waiting for connection")
-def grafana = httpApi.waitAndGetClient(address,[401,403],"/api/datasources")
-
-
-
-
-def getClient(address){
-    def ret = new RESTClient(address)
-    ret.handler['401'] = ret.handler.get(Status.SUCCESS)
-    ret.handler['404'] = ret.handler.get(Status.SUCCESS)
-    ret
-}
-//envs = [:]
-//grafana  = getClient("http://localhost:3000")
-
-
+def grafana = http.waitAndGetClient(address,[401,403],"/api/datasources")
 def token = Base64.getEncoder().encodeToString(("admin:adminadmin").bytes)
-
 HttpResponseDecorator result = grafana.get([
         requestContentType: JSON,
         headers           : [Authorization: "Basic $token"],
@@ -60,7 +40,7 @@ if(!initialized){
             body: [
                     name:"Prometheus",
                     type:"prometheus",
-                    url:"http://prometheus:9090${envs.getOrDefault("PROMETHEUS_CONTEXT_PATH", "/")}".toString(),
+                    url:"http://prometheus:9090${env.getOrDefault("PROMETHEUS_CONTEXT_PATH", "/")}".toString(),
                     access:"proxy",
                     isDefault:true
             ]

@@ -1,0 +1,10 @@
+version: 1
+shathel-stack:
+  gav: git@github.com/s4s0l/shathel-stacks:registry:$version
+  deployName: registry
+  enrichers:
+    building-enricher:
+        target: ALL
+  pre-provisioners:
+    prepareCertificates:
+      type: groovy
