@@ -3,13 +3,14 @@ shathel-stack:
   gav: git@github.com/s4s0l/shathel-stacks:logstore:$version
   deployName: logstore
   dependencies:
+    git@github.com/s4s0l/shathel-stacks:registry:$version:
     git@github.com/s4s0l/shathel-stacks:proxy:$version:
       optional: true
       envs:
         PROXY_BUILD_TO_USE: kibana-basepath/
   pre-provisioners:
-    configure:
-      inline: api.setKernelParam('vm.max_map_count=262144')
+    max_map_count.yml:
+      type: ansible
   enrichers:
       addNetwork:
         target: DEPS

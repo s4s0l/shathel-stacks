@@ -2,7 +2,6 @@ version: 1
 shathel-stack:
   gav: git@github.com/s4s0l/shathel-stacks:logstash:$version
   deployName: logstash
-
   enrichers:
       logDriver:
         target: ALLOTHERS
@@ -11,7 +10,7 @@ shathel-stack:
             it.value.logging = [
                        driver: 'gelf',
                        options: [
-                          'gelf-address':"udp://${api.getIpForManagementNode()}:12201".toString(),
+                          'gelf-address':"udp://${api.managerNode.privateIp}:12201".toString(),
                           tag:stack.name
                        ]
 
