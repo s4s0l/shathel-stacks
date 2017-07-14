@@ -4,32 +4,31 @@ shathel-stack:
   deployName: proxy
   pre-provisioners:
   enrichers:
-        # it conflicted with regular secret creation of shathel
-#    preparePassword:
-#        target: SELF
-#        inline: |
-#            import org.s4s0l.shathel.commons.utils.ExecWrapper
-#            def safePassword = env['SHATHEL_ENV_SAFEPASSWORD']
-#            def manager = api.secretManager
-#            def secretExists = manager.secretExists('shathel_dfp_users_monitoring')
-#            if (safePassword == null || secretExists){
-#              return
-#            }
-#            def hashedPassword = new ExecWrapper(log, "mkpasswd").execute(safePassword.bytes, "-s -m sha-512").output
-#            def secretContents = "admin:${hashedPassword}"
-#            compose.mapSecrets {
-#                Map<String,String> secret ->
-#                if (secret.name.equals("shathel_dfp_users_monitoring")) {
-#                    //does not exist will be created in pre provisioning
-#                    provisioners.add("proxy-secret-create:${secret.name}", { context ->
-#                        manager.secretCreate(secret.name, {secretContents.bytes})
-#                    } as org.s4s0l.shathel.commons.core.environment.ProvisionerExecutable)
-#                    //do not change the name, default secret enricher will do
-#                    return [name: secret.name, external: true]
-#                } else {
-#                    secret
-#                }
-#            }
+    preparePassword:
+        target: SELF
+        inline: |
+            import org.s4s0l.shathel.commons.utils.ExecWrapper
+            def safePassword = env['SHATHEL_ENV_SAFEPASSWORD']
+            def manager = api.secretManager
+            def secretExists = manager.secretExists('shathel_dfp_users_monitoring')
+            if (safePassword == null || secretExists){
+              return
+            }
+            def hashedPassword = new ExecWrapper(log, "mkpasswd").execute(safePassword.bytes, "-s -m sha-512").output
+            def secretContents = "admin:${hashedPassword}"
+            compose.mapSecrets {
+                Map<String,String> secret ->
+                if (secret.name.equals("shathel_dfp_users_monitoring")) {
+                    //does not exist will be created in pre provisioning
+                    provisioners.add("proxy-secret-create:${secret.name}", { context ->
+                        manager.secretCreate(secret.name, {secretContents.bytes})
+                    } as org.s4s0l.shathel.commons.core.environment.ProvisionerExecutable)
+                    //do not change the name, default secret enricher will do
+                    return [name: secret.name, external: true]
+                } else {
+                    secret
+                }
+            }
     disableMonitoring:
         target: DEPS
         inline: |
