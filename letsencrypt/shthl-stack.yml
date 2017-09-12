@@ -3,6 +3,6 @@ shathel-stack:
   gav: git@github.com/s4s0l/shathel-stacks:letsencrypt:$version
   deployName: letsencrypt
   mandatoryEnvs:
-    SHATHEL_LETSENCRYPT_EMAIL: Email address for CERTBOT_EMAIL
+    SHATHEL_ENV_LETSENCRYPT_EMAIL: Email address for CERTBOT_EMAIL
   dependencies:
     git@github.com/s4s0l/shathel-stacks:proxy:$version:
