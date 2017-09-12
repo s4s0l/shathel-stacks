@@ -19,6 +19,8 @@ services:
     secrets:
       - source: shathel_dfp_users_monitoring
         target: dfp_users_monitoring
+      - source: shathel_dfp_xip_io_pem
+        target: xip_io.pem
 
   swarm-listener:
     image: vfarcic/docker-flow-swarm-listener:1.32
@@ -38,6 +40,8 @@ services:
 secrets:
   shathel_dfp_users_monitoring:
     file: ./data/default-proxy-users
+  shathel_dfp_xip_io_pem:
+    file: ./data/certs/xip.io.pem
 networks:
   network:
     ipam:
