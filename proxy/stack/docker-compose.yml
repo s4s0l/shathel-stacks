@@ -20,7 +20,7 @@ services:
       - source: shathel_dfp_users_monitoring
         target: dfp_users_monitoring
       - source: shathel_dfp_xip_io_pem
-        target: xip_io.pem
+        target: cert_xip_io.pem
 
   swarm-listener:
     image: vfarcic/docker-flow-swarm-listener:17.07.28-1
