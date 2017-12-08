@@ -11,11 +11,12 @@ shathel-stack:
             def safePassword = env['SHATHEL_ENV_SAFEPASSWORD']
             def manager = api.secretManager
             def secretExists = manager.secretExists('shathel_dfp_users_monitoring')
-            if (safePassword == null || secretExists){
+            if (env["SHATHEL_ENV_SHATHEL_DFP_USERS_MONITORING"]==null && (safePassword == null || secretExists)){
               return
             }
             def hashedPassword = new ExecWrapper(log, "mkpasswd").execute(safePassword.bytes, "-s -m sha-512").output
             def secretContents = "admin:${hashedPassword}"
+            LOGGER.info("Monitoring secret will be set to safe password: " + secretContents);
             compose.mapSecrets {
                 Map<String,String> secret ->
                 if (secret.name.equals("shathel_dfp_users_monitoring")) {
