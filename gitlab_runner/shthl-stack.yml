@@ -1,0 +1,7 @@
+version: 1
+shathel-stack:
+  gav: git@github.com/s4s0l/shathel-stacks:gitlab_runner:$version
+  deployName: gitlab_runner
+  mandatoryEnvs:
+    SHATHEL_ENV_GITLAB_TOKEN: Gitlab token
+    SHATHEL_ENV_GITLAB_URL: Gitlab url
