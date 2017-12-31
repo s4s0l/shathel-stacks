@@ -1,0 +1,17 @@
+version: 1
+shathel-stack:
+  gav: git@github.com/s4s0l/shathel-stacks:nexus:$version
+  deployName: nexus
+  post-provisioners:
+    configure:
+      type: groovy
+    test:
+      type: groovy
+  mandatoryEnvs:
+    SHATHEL_ENV_NEXUS_ADMIN_PASS: ADMIN user (admin) - password
+    SHATHEL_ENV_NEXUS_ADMIN_MAIL: ADMIN user (admin) - mail
+    SHATHEL_ENV_NEXUS_DEV_PASS: DEV user readonly (dev) - password
+    SHATHEL_ENV_NEXUS_DEV_MAIL: DEV user deadonly (dev) - mail
+    SHATHEL_ENV_NEXUS_CI_PASS: CI user (ci) - password
+    SHATHEL_ENV_NEXUS_CI_MAIL: CI user (ci) - mail
+#    SHATHEL_ENV_NEXUS_ADMIN_OVERRIDE_PASS: Alternative password if starting pass is diff then default one
