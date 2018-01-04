@@ -1,8 +1,9 @@
 version: '3'
 services:
   gitlab-runner:
-    image: flakm/gitlab-runner-auto-register:0.0.2
-    container_name: gitlab-runner
+    image: flakm/gitlab-runner-auto-register:0.0.3
+    deploy:
+      mode: global
     environment:
       - CI_SERVER_URL=${SHATHEL_ENV_GITLAB_URL}
       - REGISTRATION_TOKEN=${SHATHEL_ENV_GITLAB_TOKEN}
