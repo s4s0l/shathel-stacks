@@ -41,9 +41,10 @@ ExecutableApiFacade apii = api;
 StackCommand stackCommand = command;
 HttpApis httpApi = http
 
+prefix="/nexus"
 
 def address = "http://${api.openPublishedPort(8082)}"
-nexus = httpApi.waitAndGetClient(address, [200, 401], "/", 10)
+nexus = httpApi.waitAndGetClient(address, [200, 401], "$prefix/", 10)
 envVars = environmentContext.getAsEnvironmentVariables()
 token = Base64.getEncoder().encodeToString(("admin:${envVars.get("SHATHEL_ENV_NEXUS_ADMIN_PASS")}").bytes)
 token_ci = Base64.getEncoder().encodeToString(("ci:${envVars.get("SHATHEL_ENV_NEXUS_CI_PASS")}").bytes)
@@ -57,7 +58,7 @@ feature 'anonymous access should be disabled', {
     assert nexus.get(
             contentType: ContentType.TEXT,
             headers: [Accept: "application/xml"],
-            path: "/repository/maven-internal/org/foo/1.0.0/foo-1.0.0.pom",
+            path: "$prefix/repository/maven-internal/org/foo/1.0.0/foo-1.0.0.pom",
     ).status == 401
 }
 
@@ -106,7 +107,7 @@ def uploadFile(String repo, String version, String my_token) {
             contentType: ContentType.TEXT,
             headers: [Authorization: "Basic $my_token", Accept: "application/json"],
             body: pomFile,
-            path: "/repository/$repo/org/foo/$version/foo-${version}.pom",
+            path: "$prefix/repository/$repo/org/foo/$version/foo-${version}.pom",
     )
 }
 
@@ -115,7 +116,7 @@ def getFile(String repo, String version, String my_token) {
     return nexus.get(
             contentType: ContentType.TEXT,
             headers: [Authorization: "Basic $my_token", Accept: "application/xml"],
-            path: "/repository/$repo/org/foo/$version/foo-${version}.pom",
+            path: "$prefix/repository/$repo/org/foo/$version/foo-${version}.pom",
     )
 }
 
@@ -124,6 +125,6 @@ def deleteFile(String repo, String version, String my_token) {
     return nexus.delete(
             contentType: ContentType.ANY,
             headers: [Authorization: "Basic $my_token", Accept: "application/json"],
-            path: "/repository/$repo/org/foo/$version/foo-${version}.pom",
+            path: "$prefix/repository/$repo/org/foo/$version/foo-${version}.pom",
     )
 }

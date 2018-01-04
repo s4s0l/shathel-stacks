@@ -1,6 +1,6 @@
 version: '3'
 services:
-  artifactory:
+  nexus:
     image: sonatype/nexus3:latest
     ports:
       - 8082:8081
@@ -12,9 +12,11 @@ services:
           com.df.distribute: "true"
           com.df.usersSecret: "monitoring"
           com.df.servicePath: "/nexus/"
-          com.df.reqPathReplace: /
-          com.df.reqPathSearch: /nexus/
+          com.df.addReqHeader: "X-Forwarded-Proto https"
+          com.df.denyHttp: "true"
           com.df.port: "8081"
+    environment:
+      - NEXUS_CONTEXT=nexus
 
 volumes:
   nexus-data:

@@ -21,10 +21,10 @@ ExecutableApiFacade apii = api;
 StackCommand stackCommand = command;
 HttpApis httpApi = http
 
-
+prefix="/nexus"
 def address = "http://${api.openPublishedPort(8082)}"
 log("Waiting for connection")
-nexus = httpApi.waitAndGetClient(address, [200, 401], "/", 1000)
+nexus = httpApi.waitAndGetClient(address, [200, 401], "$prefix/", 1000)
 
 
 log "Checking if already initialized"
@@ -35,7 +35,7 @@ token = Base64.getEncoder().encodeToString(("admin:admin123").bytes)
 result = nexus.get(
         headers: [Authorization: "Basic $token"],
         contentType: JSON,
-        path: '/service/siesta/rest/beta/read-only',
+        path: "$prefix/service/siesta/rest/beta/read-only",
 )
 
 if (result.status == 401){
@@ -47,7 +47,7 @@ if (result.status == 401){
     result = nexus.get(
             headers: [Authorization: "Basic $token"],
             contentType: JSON,
-            path: '/service/siesta/rest/beta/read-only',
+            path: "$prefix/service/siesta/rest/beta/read-only",
     )
 }
 
@@ -60,7 +60,7 @@ def getScripts() {
     def resultGet = nexus.get(
             contentType: JSON,
             headers: [Authorization: "Basic $token"],
-            path: "/service/siesta/rest/v1/script"
+            path: "$prefix/service/siesta/rest/v1/script"
     )
     assert resultGet.status == 200
     def scripts = resultGet.data.collect { it.name }
@@ -77,7 +77,7 @@ def uploadScript(String scriptText, String name) {
         def result = nexus.put(
                 contentType: JSON,
                 headers: [Authorization: "Basic $token", Accept: "application/json"],
-                path: "/service/siesta/rest/v1/script/$name",
+                path: "$prefix/service/siesta/rest/v1/script/$name",
                 body: [
                         name   : name,
                         content: scriptText,
@@ -89,7 +89,7 @@ def uploadScript(String scriptText, String name) {
         def result = nexus.post(
                 contentType: JSON,
                 headers: [Authorization: "Basic $token", Accept: "application/json"],
-                path: "/service/siesta/rest/v1/script",
+                path: "$prefix/service/siesta/rest/v1/script",
                 body: [
                         name   : name,
                         content: scriptText,
@@ -108,7 +108,7 @@ def runScript(String name) {
     def result = nexus.post(
             contentType: 'text/plain',
             headers: [Authorization: "Basic $token", Accept: "application/json"],
-            path: "/service/siesta/rest/v1/script/$name/run",
+            path: "$prefix/service/siesta/rest/v1/script/$name/run",
             body: [name: name, result: ""]
     )
     assert result.status == 200
@@ -116,13 +116,13 @@ def runScript(String name) {
 
     def deleteRes = nexus.delete(
             headers: [Authorization: "Basic $token", Accept: "application/json"],
-            path: "/service/siesta/rest/v1/script/$name"
+            path: "$prefix/service/siesta/rest/v1/script/$name"
     )
 
     if (deleteRes.status == 401) { // after changing default password... ;)
         deleteRes = nexus.delete(
                 headers: [Authorization: "Basic $new_token", Accept: "application/json"],
-                path: "/service/siesta/rest/v1/script/$name"
+                path: "$prefix/service/siesta/rest/v1/script/$name"
         )
     }
 

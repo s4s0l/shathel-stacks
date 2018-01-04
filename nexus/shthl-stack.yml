@@ -15,3 +15,6 @@ shathel-stack:
     SHATHEL_ENV_NEXUS_CI_PASS: CI user (ci) - password
     SHATHEL_ENV_NEXUS_CI_MAIL: CI user (ci) - mail
 #    SHATHEL_ENV_NEXUS_ADMIN_OVERRIDE_PASS: Alternative password if starting pass is diff then default one
+  dependencies:
+    git@github.com/s4s0l/shathel-stacks:proxy:$version:
+      optional: true
