@@ -10,7 +10,7 @@ services:
       labels:
           com.df.notify: "true"
           com.df.distribute: "true"
-          com.df.usersSecret: "monitoring"
+          com.df.ignoreAuthorization: "true"
           com.df.servicePath: "/nexus/"
           com.df.addReqHeader: "X-Forwarded-Proto https"
           com.df.denyHttp: "true"
