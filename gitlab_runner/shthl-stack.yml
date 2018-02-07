@@ -10,3 +10,4 @@ shathel-stack:
     # SHATHEL_ENV_PROJECTS_TO_REGISTER: Gitlab's project's ids separeted by ';' that should be registered for this project
     # SHATHEL_ENV_GITLAB_CUSTOM_RUNNER_NAME: Gtlab runners description
     # SHATHEL_ENV_GITLAB_LOCKED_MODE: Should gitlab runner be locked to one project
+    # SHATHEL_ENV_GITLAB_PRIVILEGED_MODE: Should runners run in privileged mode
