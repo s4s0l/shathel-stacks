@@ -1,7 +1,7 @@
 version: '3'
 services:
   gitlab-runner:
-    image: flakm/gitlab-runner-auto-register:0.0.7
+    image: flakm/gitlab-runner-auto-register:0.0.8
     deploy:
       mode: global
     environment:
@@ -13,5 +13,6 @@ services:
       - REGISTER_LOCKED=${SHATHEL_ENV_GITLAB_LOCKED_MODE}
       - DOCKER_PRIVILEGED=${SHATHEL_ENV_GITLAB_PRIVILEGED_MODE}
       - DOCKER_VOLUMES=/var/run/docker.sock:/var/run/docker.sock.host
+      - RUNNER_TAG_LIST=${SHATHEL_ENV_GITLAB_TAGS}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
