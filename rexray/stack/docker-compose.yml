@@ -1,0 +1,5 @@
+version: '3.3'
+services:
+  marker:
+    image: busybox:1
+    command: sleep 999999999999d

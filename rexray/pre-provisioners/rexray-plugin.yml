@@ -1,0 +1,11 @@
+---
+- hosts: all
+  become: yes
+  serial: 1
+  tasks:
+    - shell: "docker plugin inspect shrex"
+      register: plugin_present
+      failed_when: "plugin_present.rc != 1 and plugin_present.rc != 0"
+      changed_when: False
+    - shell: "docker plugin install rexray/dobs:0.11.1 DOBS_REGION={{shathel_env_do_region | default('nyc1') }} DOBS_TOKEN={{shathel_env_do_token}} --grant-all-permissions --alias shrex"
+      when: plugin_present.rc != 0
