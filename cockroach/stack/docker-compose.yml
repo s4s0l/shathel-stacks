@@ -1,0 +1,60 @@
+version: '3.4'
+services:
+  db:
+    build: ./roachext
+    command: --logtostderr --insecure
+    volumes:
+          - roach-db:/cockroach/cockroach-data
+    environment:
+      EXPECTED_INSTANCE_COUNT: ${COCKROACH_REPLICAS:-1}
+      RUNNING_PORT: 26257
+      DNS_NAME: tasks.db
+      INSTANCE_SLOT: "{{.Task.Slot}}"
+    ports:
+     - "26252:26257"
+    networks:
+      - roachnet
+    deploy:
+      update_config:
+            parallelism: 1
+            delay: 60s
+      endpoint_mode: vip
+      mode: replicated
+      replicas: ${COCKROACH_REPLICAS:-1}
+      labels:
+          com.df.notify: "true"
+          com.df.distribute: "true"
+          com.df.usersSecret: "monitoring"
+          com.df.servicePath: "/roach/"
+          com.df.reqPathReplace: /
+          com.df.reqPathSearch: /roach/
+          com.df.port: "8080"
+
+  sqlpad:
+    image: sqlpad/sqlpad:2.4.2
+    command: --base-url /roachsql/
+    volumes:
+      - sqlpad-data:/var/lib/sqlpad
+    ports:
+     - "3000:3000"
+    networks:
+      - roachnet
+    deploy:
+      labels:
+          com.df.notify: "true"
+          com.df.distribute: "true"
+          com.df.usersSecret: "monitoring"
+          com.df.servicePath: "/roachsql/"
+#          com.df.reqPathReplace: /roachsql/
+#          com.df.reqPathSearch: /roachsql//
+          com.df.port: "3000"
+
+
+volumes:
+  sqlpad-data:
+  roach-db:
+      labels:
+        org.shathel.rexray: 'true'
+
+networks:
+  roachnet:

@@ -1,0 +1,20 @@
+version: 1
+shathel-stack:
+  gav: git@github.com/s4s0l/shathel-stacks:cockroach:$version
+  deployName: cockroach
+  dependencies:
+    git@github.com/s4s0l/shathel-stacks:rexray:$version:
+    git@github.com/s4s0l/shathel-stacks:proxy:$version:
+      optional: true
+  enrichers:
+      addNetwork:
+        target: DEPS
+        inline: >
+          compose.addExternalNetworkAndAttachAllServices("cockroach_roachnet")
+      addConnectionUrl:
+        target: DEPS
+        inline: >
+          env['COCKROACH_STACK_JDBC']='jdbc:postgresql://cockroach_db:26252/?sslmode=disable'
+  post-provisioners:
+    configure:
+      type: groovy
