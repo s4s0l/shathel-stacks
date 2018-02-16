@@ -1,0 +1,33 @@
+version: '3.4'
+services:
+  server:
+    image: confluentinc/cp-kafka:3.1.2
+    volumes:
+      - kafka-db:/var/lib/kafka/data
+    ports:
+      - 6092:9092
+    networks:
+      - kafkanet
+    environment:
+      - KAFKA_BROKER_ID={{.Task.Slot}}
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka_server:6092
+
+  zookeeper:
+    image: zookeeper:3.4.11
+    networks:
+       - kafkanet
+    ports:
+      - 2181:2181
+
+
+volumes:
+  kafka-db:
+      labels:
+        org.shathel.rexray: 'true'
+
+networks:
+  kafkanet:
+    ipam:
+      config:
+        - subnet: 20.10.42.0/24

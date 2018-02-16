@@ -1,0 +1,15 @@
+version: 1
+shathel-stack:
+  gav: git@github.com/s4s0l/shathel-stacks:kafka:$version
+  deployName: kafka
+  dependencies:
+    git@github.com/s4s0l/shathel-stacks:rexray:$version:
+  enrichers:
+      addNetwork:
+        target: DEPS
+        inline: >
+          compose.addExternalNetworkAndAttachAllServices("kafka_kafkanet")
+      addConnectionUrl:
+        target: DEPS
+        inline: >
+          env['KAFKA_STACK_ADDRESS']='kafka_server:6092'
