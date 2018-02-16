@@ -11,7 +11,7 @@ services:
     environment:
       - KAFKA_BROKER_ID={{.Task.Slot}}
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka_server:6092
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka_server:9092
 
   zookeeper:
     image: zookeeper:3.4.11

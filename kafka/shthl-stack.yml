@@ -12,4 +12,4 @@ shathel-stack:
       addConnectionUrl:
         target: DEPS
         inline: >
-          env['KAFKA_STACK_ADDRESS']='kafka_server:6092'
+          env['KAFKA_STACK_ADDRESS']='kafka_server:9092'
