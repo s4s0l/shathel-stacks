@@ -1,0 +1,7 @@
+version: 1
+shathel-stack:
+  gav: git@github.com/s4s0l/shathel-stacks:sematext:$version
+  deployName: sematext
+  mandatoryEnvs:
+    SHATHEL_ENV_LOGSENE_TOKEN: specific per app
+    SHATHEL_ENV_SPM_TOKEN: for docker app
