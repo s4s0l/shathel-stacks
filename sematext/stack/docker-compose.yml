@@ -1,0 +1,14 @@
+version: '3'
+services:
+  sematext:
+    image: sematext/sematext-agent-docker:latest
+    deploy:
+      mode: global 
+    environment:
+      - LOGSENE_TOKEN=${SHATHEL_ENV_LOGSENE_TOKEN}
+      - SPM_RECEIVER_URL=${SHATHEL_ENV_SPM_RECEIVER_URL:-https://spm-receiver.eu.sematext.com/receiver/v1}
+      - LOGSENE_RECEIVER_URL=${SHATHEL_ENV_LOGSENE_RECEIVER_URL:-https://logsene-receiver.eu.sematext.com}
+      - EVENTS_RECEIVER_URL=${SHATHEL_ENV_EVENTS_RECEIVER_URL:-https://event-receiver.eu.sematext.com}
+      - SPM_TOKEN=${SHATHEL_ENV_SPM_TOKEN}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
