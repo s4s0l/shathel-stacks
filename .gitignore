@@ -16,3 +16,4 @@ gradle-app.setting
 # gradle/wrapper/gradle-wrapper.properties
 registry/stack/certs/registry.crt
 registry/stack/certs/registry.key
+dummy
