@@ -1,0 +1,5 @@
+version: "3"
+services:
+  metadata:
+    image: ianneub/network-tools
+    command: /bin/bash -c "until false; do ping tasks.metadata; sleep 1; done"

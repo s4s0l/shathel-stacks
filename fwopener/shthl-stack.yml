@@ -1,0 +1,18 @@
+version: 1
+shathel-stack:
+  gav: git@github.com/s4s0l/shathel-stacks:fwopener:$version
+  deployName: fwopener
+  enrichers:
+    udpOpener:
+        target: DEPS
+        inline: |
+            def services = compose.yml.services?.findAll {
+                    println ("testing: " + it.value.deploy?.labels)
+                   it.value.deploy?.labels?.find { label -> label.key == 'org.shathel.fwopener.udp' && label.value != null  && label.value.trim() != ""} != null
+               }.collect { it.value.deploy.labels['org.shathel.fwopener.udp'] }
+
+            def udps = services.collect {it.split(',') }.flatten().join(",")
+
+            println("UDPS to open: $udps")
+            if(!udps.isEmpty())
+              provisioners.addAnsible("opener/firewall.yml", ['opener_stack_name':stack.deployName, 'opener_udp_ports':udps])

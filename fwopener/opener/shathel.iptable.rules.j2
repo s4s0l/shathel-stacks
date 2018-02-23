@@ -1,0 +1,3 @@
+*filter
+-I DOCKER-USER -d 172.18.0.0/16 -p udp --match multiport --dports {{opener_udp_ports}} -j RETURN
+COMMIT
