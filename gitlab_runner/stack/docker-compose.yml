@@ -1,7 +1,7 @@
 version: '3'
 services:
   gitlab-runner:
-    image: flakm/gitlab-runner-auto-register:0.0.8
+    image: flakm/gitlab-runner-auto-register:0.0.9
     deploy:
       mode: global
     hostname: "{{.Node.Hostname}}-${SHATHEL_ENV_GITLAB_CUSTOM_RUNNER_NAME:-runner}"
