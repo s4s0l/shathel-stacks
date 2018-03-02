@@ -19,7 +19,9 @@ services:
           com.df.reqPathReplace: /
           com.df.reqPathSearch: /portainer/
           com.df.port: "9000"
-
+      resources:
+          limits:
+            memory:  ${SHATHEL_ENV_PORTAINER_MEMORY_LIMIT:-512mb}
 
 volumes:
   portainer-data:

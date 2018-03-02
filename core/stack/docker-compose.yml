@@ -10,6 +10,10 @@ services:
       mode: global
       placement:
             constraints: [node.role == manager]
+      resources:
+        limits:
+          memory: 16mb
+                  
 networks:
   network:
     ipam:

@@ -12,6 +12,11 @@ services:
       - KAFKA_BROKER_ID={{.Task.Slot}}
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
       - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka_server:9092
+      - KAFKA_HEAP_OPTS=${SHATHEL_ENV_KAFKA_HEAP_OPTS:--Xmx1G -Xms1G}
+    deploy:
+      resources:
+        limits:
+          memory:  ${SHATHEL_ENV_KAFKA_MEMORY_LIMIT:-1.5gb}
 
   zookeeper:
     image: zookeeper:3.4.11
@@ -19,7 +24,12 @@ services:
        - kafkanet
     ports:
       - 2181:2181
-
+    environment:
+        - ZOO_HEAP_SIZE="${SHATHEL_ENV_ZK_HEAP_SIZE:-1024}"
+    deploy:
+      resources:
+        limits:
+          memory:  ${SHATHEL_ENV_ZK_HEAP_MEMORY_LIMIT:-1gb}
 
 volumes:
   kafka-db:

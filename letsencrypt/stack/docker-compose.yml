@@ -19,3 +19,6 @@ services:
           com.df.distribute: "true"
           com.df.port: "80"
         replicas: 1
+        resources:
+          limits:
+            memory:  ${SHATHEL_ENV_LETSENCRYPT_MEMORY_LIMIT:-512mb}

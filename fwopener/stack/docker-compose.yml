@@ -3,3 +3,7 @@ services:
   metadata:
     image: ianneub/network-tools
     command: /bin/bash -c "until false; do ping tasks.metadata; sleep 1; done"
+    deploy:
+      resources:
+          limits:
+            memory: ${SHATHEL_ENV_FW_OPENER_MEMORY_LIMIT:-16mb}

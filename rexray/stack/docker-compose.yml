@@ -3,3 +3,7 @@ services:
   marker:
     image: busybox:1
     command: sleep 999999999999d
+    deploy: 
+      resources:
+        limits:
+          memory: 16mb

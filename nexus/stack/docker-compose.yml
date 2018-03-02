@@ -15,8 +15,12 @@ services:
           com.df.addReqHeader: "X-Forwarded-Proto https"
           com.df.denyHttp: "true"
           com.df.port: "8081"
+      resources:
+          limits:
+            memory: ${SHATHEL_ENV_NEXUS_MEMORY_LIMIT:-1.5gb}
     environment:
       - NEXUS_CONTEXT=nexus
+      - INSTALL4J_ADD_VM_PARAMS=${SHATHEL_ENV_NEXUS_OPTS:--Xms1524m -Xmx1524m -XX:MaxDirectMemorySize=1600m -Djava.util.prefs.userRoot=/nexus-data/javaprefs}
 
 volumes:
   nexus-data:

@@ -4,6 +4,9 @@ services:
     image: flakm/gitlab-runner-auto-register:0.0.9
     deploy:
       mode: global
+        resources:
+          limits:
+            memory:  ${SHATHEL_ENV_RUNNER_MEMORY_LIMIT:-2gb}
     hostname: "{{.Node.Hostname}}-${SHATHEL_ENV_GITLAB_CUSTOM_RUNNER_NAME:-runner}"
     environment:
       - CI_SERVER_URL=${SHATHEL_ENV_GITLAB_URL}

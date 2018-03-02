@@ -16,6 +16,9 @@ services:
       update_config:
         delay: 15s
       replicas: 2
+      resources:
+          limits:
+            memory:  ${SHATHEL_ENV_PROXY_MEMORY_LIMIT:-512mb}
     secrets:
       - source: shathel_dfp_users_monitoring
         target: dfp_users_monitoring
@@ -37,6 +40,9 @@ services:
       replicas: 1
       placement:
         constraints: [node.role == manager]
+      resources:
+          limits:
+            memory:  ${SHATHEL_ENV_SWARM_LISTENER_MEMORY_LIMIT:-512mb}        
 secrets:
   shathel_dfp_users_monitoring:
     file: ./data/default-proxy-users

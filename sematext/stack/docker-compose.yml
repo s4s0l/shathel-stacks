@@ -3,7 +3,10 @@ services:
   sematext:
     image: sematext/sematext-agent-docker:latest
     deploy:
-      mode: global 
+      mode: global
+      resources:
+        limits:
+          memory: ${SHATHEL_ENV_SEMATEXT_MEMORY_LIMIT:-2gb}
     environment:
       - LOGSENE_TOKEN=${SHATHEL_ENV_LOGSENE_TOKEN}
       - SPM_RECEIVER_URL=${SHATHEL_ENV_SPM_RECEIVER_URL:-https://spm-receiver.eu.sematext.com/receiver/v1}
