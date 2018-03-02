@@ -30,7 +30,7 @@ assert stack.stackResources.composeFileModel != null
 assert compose != null
 
 assert env["SHATHEL_ENV_TYPE"] != null
-assert stackContext.getStackTreeDescription() != null
+assert stackContext.getStackTree() != null
 
 assert provisioners instanceof List
 
