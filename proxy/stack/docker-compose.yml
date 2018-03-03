@@ -15,7 +15,7 @@ services:
     deploy:
       update_config:
         delay: 15s
-      replicas: 2
+      replicas: 1
       resources:
           limits:
             memory:  ${SHATHEL_ENV_PROXY_MEMORY_LIMIT:-512mb}
