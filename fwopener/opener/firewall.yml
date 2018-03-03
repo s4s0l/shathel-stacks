@@ -4,12 +4,17 @@
   tasks:
         - name: Get public interface name
           shell: ip addr show | grep {{public_ip}} | cut -f2 | awk '{ print $7 }' | head
-          register: public_if_name_command
+          register: if_name_command
           changed_when: False
-          failed_when: "public_if_name_command.rc != 0 or public_if_name_command.stdout == ''"
+        - name: Get private name if public not avail (scaleway???)
+          shell: ip addr show | grep {{private_ip}} | cut -f2 | awk '{ print $7 }' | head
+          register: if_name_command
+          when: "if_name_command.rc != 0 or if_name_command.stdout == ''"
+          changed_when: False
         - name: Save if name
           set_fact:
-            public_if: "{{ public_if_name_command.stdout }}"
+            public_if: "{{ if_name_command.stdout }}"
+          failed_when: "if_name_command.rc != 0 or if_name_command.stdout == ''"
         - name: /etc/iptables dir present
           file:
             path: /etc/iptables
