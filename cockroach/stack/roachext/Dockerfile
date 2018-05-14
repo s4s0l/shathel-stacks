@@ -1,4 +1,4 @@
-FROM cockroachdb/cockroach:v1.1.5
+FROM cockroachdb/cockroach:v2.0.1
 RUN apt-get update && apt-get install -y \
         dnsutils \
      && rm -rf /var/lib/apt/lists/*
