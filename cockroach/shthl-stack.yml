@@ -16,6 +16,9 @@ shathel-stack:
         target: DEPS
         inline: >
           env['COCKROACH_STACK_JDBC']='jdbc:postgresql://cockroach_db:26257/?sslmode=disable'
+          env['COCKROACH_STACK_HOST']='cockroach_db'
+          env['COCKROACH_STACK_PORT']='26257'
+          env['COCKROACH_STACK_PARAMS']='sslmode=disable'
   post-provisioners:
     configure:
       type: groovy
