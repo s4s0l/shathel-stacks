@@ -14,7 +14,7 @@ shathel-stack:
           compose.addExternalNetworkAndAttachAllServices("cockroach_roachnet")
       addConnectionUrl:
         target: DEPS
-        inline: >
+        inline: |
           env['COCKROACH_STACK_JDBC']='jdbc:postgresql://cockroach_db:26257/?sslmode=disable'
           env['COCKROACH_STACK_HOST']='cockroach_db'
           env['COCKROACH_STACK_PORT']='26257'
