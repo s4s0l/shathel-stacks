@@ -1,0 +1,8 @@
+version: 1
+shathel-stack:
+  gav: git@github.com/s4s0l/shathel-stacks:monitor:$version
+  deployName: monitor
+  dependencies:
+    git@github.com/s4s0l/shathel-stacks:rexray:$version:
+    git@github.com/s4s0l/shathel-stacks:proxy:$version:
+      optional: true

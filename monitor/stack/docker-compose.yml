@@ -1,0 +1,87 @@
+version: "3.4"
+services:
+  monitor:
+    image: dockerflow/docker-flow-monitor:2-18.08.24-2
+    environment:
+    - LISTENER_ADDRESS=mon-listener
+    - GLOBAL_SCRAPE_INTERVAL=10s
+    - ARG_ALERTMANAGER_URL=http://mon-alert-manager:9093
+    networks:
+    - monnet
+    ports:
+    - 9090:9090
+    volumes:
+    - prometheus-db:/prometheus
+    deploy:
+      #      labels:
+      #        com.df.notify: "true"
+      #        com.df.distribute: "true"
+      #        com.df.usersSecret: "monitoring"
+      #        com.df.servicePath: "/oklog/,/store/"
+      #        com.df.reqPathSearchReplace: /oklog/,/ui/:/store/,/store/
+      #        com.df.port: "7650"
+      resources:
+        limits:
+          memory:  ${SHATHEL_ENV_PROMETHEUS_MEMORY_LIMIT:-128mb}
+
+  mon-alert-manager:
+    image: vfarcic/alert-manager:slack
+    networks:
+    - monnet
+
+  mon-listener:
+    image: dockerflow/docker-flow-swarm-listener:18.06.03-26
+    networks:
+    - monnet
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+    - DF_NOTIFY_CREATE_SERVICE_URL=http://monitor:8080/v1/docker-flow-monitor/reconfigure
+    - DF_NOTIFY_REMOVE_SERVICE_URL=http://monitor:8080/v1/docker-flow-monitor/remove
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+  mon-cadvisor:
+    image: google/cadvisor
+    networks:
+    - monnet
+    volumes:
+    - /:/rootfs
+    - /var/run:/var/run
+    - /sys:/sys
+    - /var/lib/docker:/var/lib/docker
+    deploy:
+      mode: global
+      labels:
+        com.df.notify: "true"
+        com.df.scrapePort: "8080"
+
+  mon-node-exporter:
+    image: basi/node-exporter
+    networks:
+    - monnet
+    environment:
+    - HOST_HOSTNAME=/etc/host_hostname
+    volumes:
+    - /proc:/host/proc
+    - /sys:/host/sys
+    - /:/rootfs
+    - /etc/hostname:/etc/host_hostname
+    deploy:
+      mode: global
+      labels:
+        com.df.notify: "true"
+        com.df.scrapePort: "9100"
+        com.df.alertName.1: "mem_load"
+        com.df.alertIf.1: "(sum by (instance) (node_memory_MemTotal) - sum by (instance) (node_memory_MemFree + node_memory_Buffers + node_memory_Cached)) / sum by (instance) (node_memory_MemTotal) > 0.8"
+        com.df.alertName.2: "diskload"
+        com.df.alertIf.2: "@node_fs_limit:0.8"
+    command: '--path.procfs="/host/proc" --path.sysfs="/host/sys" --collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)" --collector.textfile.directory="/etc/node-exporter/" --collector.conntrack --collector.diskstats --collector.entropy --collector.filefd --collector.filesystem --collector.loadavg --collector.mdadm --collector.meminfo --collector.netdev --collector.netstat --collector.stat --collector.textfile --collector.time --collector.vmstat --collector.ipvs'
+
+
+
+networks:
+  monnet:
+volumes:
+  prometheus-db:
