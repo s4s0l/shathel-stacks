@@ -1,0 +1,53 @@
+version: "3.4"
+services:
+  oklogservice:
+    image: oklog/oklog:v0.3.2
+    command: ingeststore -store.segment-replication-factor 1
+    ports:
+    - 7650:7650
+    - 7651:7651
+    - 7653:7653
+    - 7659:7659
+    networks:
+    - oklognet
+    volumes:
+    - oklog-db:/data
+    deploy:
+      labels:
+        com.df.notify: "true"
+        com.df.distribute: "true"
+        com.df.usersSecret: "monitoring"
+        com.df.servicePath: "/oklog/,/store/"
+        com.df.reqPathSearchReplace: /oklog/,/ui/:/store/,/store/
+        com.df.port: "7650"
+      resources:
+        limits:
+          memory:  ${SHATHEL_ENV_OKLOG_MEMORY_LIMIT:-128mb}
+
+  oklogforward:
+    image: gliderlabs/logspout
+    command: raw+tcp://oklogservice:7651
+    environment:
+          RAW_FORMAT: "{{.Node.Hostname}}|{{ `{{ .Container.Name }}|{{ .Data }}\n` }}"
+    networks:
+    - oklognet
+    volumes:
+    - /etc/hostname:/etc/host_hostname:ro
+    - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      mode: global
+      resources:
+        limits:
+          cpus: '0.20'
+          memory: ${SHATHEL_ENV_OKLOG_FWD_MEMORY_LIMIT:-128mb}
+        reservations:
+          cpus: '0.10'
+          memory: ${SHATHEL_ENV_OKLOG_FWD_MEMORY_LIMIT:-128mb}
+
+
+networks:
+  oklognet:
+volumes:
+  oklog-db:
+    labels:
+      org.shathel.rexray: 'true'

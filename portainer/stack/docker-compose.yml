@@ -1,12 +1,30 @@
-version: "3"
+version: "3.4"
 services:
+  agent:
+    image: portainer/agent:1.1.2
+    environment:
+      # REQUIRED: Should be equal to the service name prefixed by "tasks." when
+      # deployed inside an overlay network
+      AGENT_CLUSTER_ADDR: tasks.agent
+      # AGENT_PORT: 9001
+      # LOG_LEVEL: debug
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - /var/lib/docker/volumes:/var/lib/docker/volumes
+    networks:
+    - portnet
+    deploy:
+      mode: global
+      placement:
+        constraints: [node.platform.os == linux]
   portainer:
-    image: portainer/portainer:1.11.4
-    command: -H unix:///var/run/docker.sock  --no-auth
+    image: portainer/portainer:1.19.1
+    command: --no-auth -H tcp://tasks.agent:9001 --tlsskipverify
+    networks:
+    - portnet
     ports:
       - 9001:9000
     volumes:
-          - /var/run/docker.sock:/var/run/docker.sock
           - portainer-data:/data
     deploy:
       placement:
@@ -22,6 +40,10 @@ services:
       resources:
           limits:
             memory:  ${SHATHEL_ENV_PORTAINER_MEMORY_LIMIT:-512mb}
+networks:
+  portnet:
+    driver: overlay
+    attachable: true
 
 volumes:
   portainer-data:

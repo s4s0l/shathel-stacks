@@ -1,7 +1,7 @@
 version: "3.1"
 services:
   proxy:
-    image: vfarcic/docker-flow-proxy:17.09.06-7
+    image: dockerflow/docker-flow-proxy:18.07.06-72
     ports:
       - 8080:8080
       - ${SHATHEL_PROXY_PORT_HTTP:-80}:80
@@ -26,7 +26,7 @@ services:
         target: cert_xip_io.pem
 
   swarm-listener:
-    image: vfarcic/docker-flow-swarm-listener:17.07.28-1
+    image: dockerflow/docker-flow-swarm-listener:18.06.03-26
     ports:
       - 9999:8080
     networks:

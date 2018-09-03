@@ -2,9 +2,9 @@ version: 1
 shathel-stack:
   gav: git@github.com/s4s0l/shathel-stacks:portainer:$version
   deployName: portainer
-  post-provisioners:
-    configure:
-      type: groovy
+#  post-provisioners:
+#    configure:
+#      type: groovy
   dependencies:
     git@github.com/s4s0l/shathel-stacks:proxy:$version:
       optional: true
