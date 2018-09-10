@@ -22,7 +22,7 @@ services:
         com.df.port: "7650"
       resources:
         limits:
-          memory:  ${SHATHEL_ENV_OKLOG_MEMORY_LIMIT:-128mb}
+          memory:  ${SHATHEL_ENV_OKLOG_MEMORY_LIMIT:-512mb}
 
   oklogforward:
     image: gliderlabs/logspout
@@ -38,11 +38,11 @@ services:
       mode: global
       resources:
         limits:
-          cpus: '0.20'
-          memory: ${SHATHEL_ENV_OKLOG_FWD_MEMORY_LIMIT:-128mb}
+          cpus: '0.15'
+          memory: ${SHATHEL_ENV_OKLOG_FWD_MEMORY_LIMIT:-256mb}
         reservations:
-          cpus: '0.10'
-          memory: ${SHATHEL_ENV_OKLOG_FWD_MEMORY_LIMIT:-128mb}
+          cpus: '0.15'
+          memory: ${SHATHEL_ENV_OKLOG_FWD_MEMORY_LIMIT:-256mb}
 
 
 networks:

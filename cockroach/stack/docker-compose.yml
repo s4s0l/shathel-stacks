@@ -23,12 +23,8 @@ services:
       replicas: ${COCKROACH_REPLICAS:-1}
       resources:
         limits:
-          # cpus: '1.0'
           memory: ${SHATHEL_ENV_ROACH_MEMORY_LIMIT:-2gb}
-        # reservations:
-          # cpus: '1.0'
-          # memory: 2gb
-  
+
       labels:
           com.df.notify: "true"
           com.df.distribute: "true"

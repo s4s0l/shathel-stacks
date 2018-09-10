@@ -3,9 +3,13 @@ services:
   monitor:
     image: dockerflow/docker-flow-monitor:2-18.08.24-2
     environment:
+    - DF_NODE_TARGET_LABELS=role
+    - DF_SCRAPE_TARGET_LABELS=monLabel
     - LISTENER_ADDRESS=mon-listener
-    - GLOBAL_SCRAPE_INTERVAL=10s
+    - GLOBAL_SCRAPE_INTERVAL=15s
     - ARG_ALERTMANAGER_URL=http://mon-alert-manager:9093
+    - ARG_WEB_ROUTE-PREFIX=/prometheus
+    - ARG_WEB_EXTERNAL-URL=http://${SHATHEL_ENV_DOMAIN}/prometheus
     networks:
     - monnet
     ports:
@@ -13,21 +17,30 @@ services:
     volumes:
     - prometheus-db:/prometheus
     deploy:
-      #      labels:
-      #        com.df.notify: "true"
-      #        com.df.distribute: "true"
-      #        com.df.usersSecret: "monitoring"
-      #        com.df.servicePath: "/oklog/,/store/"
-      #        com.df.reqPathSearchReplace: /oklog/,/ui/:/store/,/store/
-      #        com.df.port: "7650"
+      labels:
+        com.df.notify: "true"
+        com.df.usersSecret: "monitoring"
+        com.df.distribute: "true"
+        com.df.servicePath: "/prometheus"
+        com.df.port: "9090"
       resources:
         limits:
-          memory:  ${SHATHEL_ENV_PROMETHEUS_MEMORY_LIMIT:-128mb}
+          cpus: '0.10'
+          memory: ${SHATHEL_ENV_PROMETHEUS_MEMORY_LIMIT:-512mb}
+        reservations:
+          memory: ${SHATHEL_ENV_PROMETHEUS_MEMORY_LIMIT:-512mb}
 
-  mon-alert-manager:
-    image: vfarcic/alert-manager:slack
-    networks:
-    - monnet
+#  mon-alert-manager:
+#    image: vfarcic/alert-manager:slack
+#    networks:
+#    - monnet
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.05'
+#          memory: ${SHATHEL_ENV_ALERTMAN_MEMORY_LIMIT:-128mb}
+#        reservations:
+#          memory: ${SHATHEL_ENV_ALERTMAN_MEMORY_LIMIT:-128mb}
 
   mon-listener:
     image: dockerflow/docker-flow-swarm-listener:18.06.03-26
@@ -38,24 +51,41 @@ services:
     environment:
     - DF_NOTIFY_CREATE_SERVICE_URL=http://monitor:8080/v1/docker-flow-monitor/reconfigure
     - DF_NOTIFY_REMOVE_SERVICE_URL=http://monitor:8080/v1/docker-flow-monitor/remove
+    - DF_INCLUDE_NODE_IP_INFO=true
     deploy:
+      resources:
+        limits:
+          cpus: '0.05'
+          memory: ${SHATHEL_ENV_MONLIS_MEMORY_LIMIT:-32mb}
+        reservations:
+          memory: ${SHATHEL_ENV_MOLLIS_MEMORY_LIMIT:-32mb}
       placement:
         constraints: [node.role == manager]
 
   mon-cadvisor:
     image: google/cadvisor
+    command: --docker_only --disable_metrics=disk --housekeeping_interval=15s --global_housekeeping_interval=10m0s
     networks:
     - monnet
     volumes:
-    - /:/rootfs
-    - /var/run:/var/run
-    - /sys:/sys
-    - /var/lib/docker:/var/lib/docker
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
     deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: ${SHATHEL_ENV_CADV_MEMORY_LIMIT:-128mb}
+        reservations:
+          memory: ${SHATHEL_ENV_CADV_MEMORY_LIMIT:-128mb}
       mode: global
       labels:
         com.df.notify: "true"
         com.df.scrapePort: "8080"
+        com.df.scrapeInterval: "15s"
+        com.df.monLabel: "cadv"
 
   mon-node-exporter:
     image: basi/node-exporter
@@ -64,11 +94,17 @@ services:
     environment:
     - HOST_HOSTNAME=/etc/host_hostname
     volumes:
-    - /proc:/host/proc
-    - /sys:/host/sys
-    - /:/rootfs
-    - /etc/hostname:/etc/host_hostname
+    - /proc:/host/proc:ro
+    - /sys:/host/sys:ro
+    - /:/rootfs:ro
+    - /etc/hostname:/etc/host_hostname:ro
     deploy:
+      resources:
+        limits:
+          cpus: '0.05'
+          memory: ${SHATHEL_ENV_NEXP_MEMORY_LIMIT:-32mb}
+        reservations:
+          memory: ${SHATHEL_ENV_NEXP_MEMORY_LIMIT:-32mb}
       mode: global
       labels:
         com.df.notify: "true"
@@ -77,11 +113,43 @@ services:
         com.df.alertIf.1: "(sum by (instance) (node_memory_MemTotal) - sum by (instance) (node_memory_MemFree + node_memory_Buffers + node_memory_Cached)) / sum by (instance) (node_memory_MemTotal) > 0.8"
         com.df.alertName.2: "diskload"
         com.df.alertIf.2: "@node_fs_limit:0.8"
+        com.df.monLabel: "nexp"
+        com.df.scrapeInterval: "15s"
     command: '--path.procfs="/host/proc" --path.sysfs="/host/sys" --collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)" --collector.textfile.directory="/etc/node-exporter/" --collector.conntrack --collector.diskstats --collector.entropy --collector.filefd --collector.filesystem --collector.loadavg --collector.mdadm --collector.meminfo --collector.netdev --collector.netstat --collector.stat --collector.textfile --collector.time --collector.vmstat --collector.ipvs'
 
-
+  grafana:
+    image: grafana/grafana:5.2.3
+    networks:
+    - monnet
+    deploy:
+      resources:
+        limits:
+          cpus: '0.05'
+          memory: ${SHATHEL_ENV_GRAFANA_MEMORY_LIMIT:-100mb}
+        reservations:
+          memory: ${SHATHEL_ENV_GRAFANA_MEMORY_LIMIT:-100mb}
+      labels:
+        com.df.notify: 'true'
+        com.df.usersSecret: "monitoring"
+        com.df.distribute: 'true'
+        com.df.servicePath: "/grafana/,/grafana/public,/grafana/api"
+        com.df.reqPathReplace: /
+        com.df.reqPathSearch: /grafana/
+        com.df.port: '3000'
+    ports:
+    - 3005:3000
+    volumes:
+    - ./g-provisioning/:/etc/grafana/provisioning/
+    environment:
+    - GF_SERVER_DOMAIN=$SHATHEL_ENV_DOMAIN
+    - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s${GRAFANA_CONTEXT_PATH:-/}
+    - GF_AUTH_ANONYMOUS_ENABLED=true
+    - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    - GF_AUTH_DISABLE_LOGIN_FORM=true
 
 networks:
   monnet:
 volumes:
   prometheus-db:
+    labels:
+      org.shathel.rexray: 'true'

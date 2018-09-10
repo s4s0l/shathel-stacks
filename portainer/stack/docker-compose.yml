@@ -14,6 +14,9 @@ services:
     networks:
     - portnet
     deploy:
+      resources:
+        limits:
+          memory:  ${SHATHEL_ENV_PORTAGENT_MEMORY_LIMIT:-32mb}
       mode: global
       placement:
         constraints: [node.platform.os == linux]
@@ -39,7 +42,7 @@ services:
           com.df.port: "9000"
       resources:
           limits:
-            memory:  ${SHATHEL_ENV_PORTAINER_MEMORY_LIMIT:-512mb}
+            memory:  ${SHATHEL_ENV_PORTAINER_MEMORY_LIMIT:-128mb}
 networks:
   portnet:
     driver: overlay
