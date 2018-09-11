@@ -76,7 +76,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.1'
+          cpus: '0.15'
           memory: ${SHATHEL_ENV_CADV_MEMORY_LIMIT:-128mb}
         reservations:
           memory: ${SHATHEL_ENV_CADV_MEMORY_LIMIT:-128mb}
