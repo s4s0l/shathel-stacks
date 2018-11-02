@@ -29,6 +29,7 @@ services:
     command: raw+tcp://oklogservice:7651
     environment:
           RAW_FORMAT: "{{.Node.Hostname}}|{{ `{{ .Container.Name }}|{{ .Data }}\n` }}"
+          INACTIVITY_TIMEOUT: 30s
     networks:
     - oklognet
     volumes:
