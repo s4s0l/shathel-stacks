@@ -1,11 +1,20 @@
-version: "3.1"
+version: "3.2"
 services:
   proxy:
     image: dockerflow/docker-flow-proxy:18.07.06-72
     ports:
-      - 8080:8080
-      - ${SHATHEL_PROXY_PORT_HTTP:-80}:80
-      - ${SHATHEL_PROXY_PORT_HTTPS:-443}:443
+      - target: 8080
+        published: 8080
+        protocol: tcp
+        mode: ingress
+      - target: 443
+        published: ${SHATHEL_PROXY_PORT_HTTPS:-443}
+        protocol: tcp
+        mode: host
+      - target: 80
+        published: ${SHATHEL_PROXY_PORT_HTTP:-80}
+        protocol: tcp
+        mode: host
     networks:
       - network
     environment:
@@ -15,7 +24,7 @@ services:
     deploy:
       update_config:
         delay: 15s
-      replicas: 1
+      mode: global
       resources:
           limits:
             memory:  ${SHATHEL_ENV_PROXY_MEMORY_LIMIT:-128mb}
