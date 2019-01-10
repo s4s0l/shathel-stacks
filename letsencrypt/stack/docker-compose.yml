@@ -21,4 +21,4 @@ services:
         replicas: 1
         resources:
           limits:
-            memory:  ${SHATHEL_ENV_LETSENCRYPT_MEMORY_LIMIT:-56mb}
+            memory:  ${SHATHEL_ENV_LETSENCRYPT_MEMORY_LIMIT:-256mb}
