@@ -15,7 +15,7 @@ services:
     ports:
     - 9090:9090
     volumes:
-    - prometheus-db:/prometheus
+    - monitor-db:/prometheus
     deploy:
       labels:
         com.df.notify: "true"
@@ -150,6 +150,6 @@ services:
 networks:
   monnet:
 volumes:
-  prometheus-db:
+  monitor-db:
     labels:
       org.shathel.rexray: 'true'
