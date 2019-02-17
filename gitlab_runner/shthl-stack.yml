@@ -7,6 +7,8 @@ shathel-stack:
     SHATHEL_ENV_GITLAB_URL: Gitlab url
     SHATHEL_ENV_GITLAB_TAGS: Gitlab tags for runner
     SHATHEL_ENV_GITLAB_REGISTER_RUN_UNTAGGED: should runners run untagged jobs
+    SHATHEL_ENV_GITLAB_RUNNER_CACHE_DIR: cache dir
+    SHATHEL_ENV_GITLAB_DOCKER_CACHE_DIR: cache dir
     # Below properties are not mandatory
     # SHATHEL_ENV_ADMIN_TOKEN: Gtilab outh access token with admin privilages to register runners in other projects
     # SHATHEL_ENV_PROJECTS_TO_REGISTER: Gitlab's project's ids separeted by ';' that should be registered for this project

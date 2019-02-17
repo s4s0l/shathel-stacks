@@ -18,5 +18,7 @@ services:
       - DOCKER_VOLUMES=/var/run/docker.sock:/var/run/docker.sock.host
       - RUNNER_TAG_LIST=${SHATHEL_ENV_GITLAB_TAGS}
       - REGISTER_RUN_UNTAGGED=${SHATHEL_ENV_GITLAB_REGISTER_RUN_UNTAGGED}
+      - DOCKER_CACHE_DIR=${SHATHEL_ENV_GITLAB_DOCKER_CACHE_DIR}
+      - RUNNER_CACHE_DIR=${SHATHEL_ENV_GITLAB_RUNNER_CACHE_DIR}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
