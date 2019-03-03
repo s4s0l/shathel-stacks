@@ -8,6 +8,7 @@ shathel-stack:
     test:
       type: groovy
   mandatoryEnvs:
+    SHATHEL_ENV_NEXUS_INSTALL_NAME: installation name, used as prefox for repos and stores
     SHATHEL_ENV_NEXUS_ADMIN_PASS: ADMIN user (admin) - password
     SHATHEL_ENV_NEXUS_ADMIN_MAIL: ADMIN user (admin) - mail
     SHATHEL_ENV_NEXUS_DEV_PASS: DEV user readonly (dev) - password
@@ -16,5 +17,6 @@ shathel-stack:
     SHATHEL_ENV_NEXUS_CI_MAIL: CI user (ci) - mail
 #    SHATHEL_ENV_NEXUS_ADMIN_OVERRIDE_PASS: Alternative password if starting pass is diff then default one
   dependencies:
+    git@github.com/s4s0l/shathel-stacks:fwopener:$version:
     git@github.com/s4s0l/shathel-stacks:proxy:$version:
       optional: true

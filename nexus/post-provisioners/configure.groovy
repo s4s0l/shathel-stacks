@@ -35,7 +35,7 @@ token = Base64.getEncoder().encodeToString(("admin:admin123").bytes)
 result = nexus.get(
         headers: [Authorization: "Basic $token"],
         contentType: JSON,
-        path: "$prefix/service/siesta/rest/beta/read-only",
+        path: "$prefix/service/rest/v1/read-only",
 )
 
 if (result.status == 401){
@@ -47,12 +47,12 @@ if (result.status == 401){
     result = nexus.get(
             headers: [Authorization: "Basic $token"],
             contentType: JSON,
-            path: "$prefix/service/siesta/rest/beta/read-only",
+            path: "$prefix/service/rest/v1/read-only",
     )
 }
 
 assert result.status == 200
-log "got valid response for /service/siesta/rest/beta/read-only"
+log "got valid response for /service/rest/v1/read-only"
 
 new_token = Base64.getEncoder().encodeToString(("admin:${envVars.get("SHATHEL_ENV_NEXUS_ADMIN_PASS")}").bytes)
 
@@ -60,7 +60,7 @@ def getScripts() {
     def resultGet = nexus.get(
             contentType: JSON,
             headers: [Authorization: "Basic $token"],
-            path: "$prefix/service/siesta/rest/v1/script"
+            path: "$prefix/service/rest/v1/script"
     )
     assert resultGet.status == 200
     def scripts = resultGet.data.collect { it.name }
@@ -77,7 +77,7 @@ def uploadScript(String scriptText, String name) {
         def result = nexus.put(
                 contentType: JSON,
                 headers: [Authorization: "Basic $token", Accept: "application/json"],
-                path: "$prefix/service/siesta/rest/v1/script/$name",
+                path: "$prefix/service/rest/v1/script/$name",
                 body: [
                         name   : name,
                         content: scriptText,
@@ -89,7 +89,7 @@ def uploadScript(String scriptText, String name) {
         def result = nexus.post(
                 contentType: JSON,
                 headers: [Authorization: "Basic $token", Accept: "application/json"],
-                path: "$prefix/service/siesta/rest/v1/script",
+                path: "$prefix/service/rest/v1/script",
                 body: [
                         name   : name,
                         content: scriptText,
@@ -102,13 +102,13 @@ def uploadScript(String scriptText, String name) {
     log "Finished with scripts: [${getScripts().join(",")}]"
 }
 
-//  curl -v -X POST -u $username:$password --header "Content-Type: text/plain" "$host/service/siesta/rest/v1/script/$name/run"
+//  curl -v -X POST -u $username:$password --header "Content-Type: text/plain" "$host/service/rest/v1/script/$name/run"
 def runScript(String name) {
     log "starting running script $name"
     def result = nexus.post(
             contentType: 'text/plain',
             headers: [Authorization: "Basic $token", Accept: "application/json"],
-            path: "$prefix/service/siesta/rest/v1/script/$name/run",
+            path: "$prefix/service/rest/v1/script/$name/run",
             body: [name: name, result: ""]
     )
     assert result.status == 200
@@ -116,13 +116,13 @@ def runScript(String name) {
 
     def deleteRes = nexus.delete(
             headers: [Authorization: "Basic $token", Accept: "application/json"],
-            path: "$prefix/service/siesta/rest/v1/script/$name"
+            path: "$prefix/service/rest/v1/script/$name"
     )
 
     if (deleteRes.status == 401) { // after changing default password... ;)
         deleteRes = nexus.delete(
                 headers: [Authorization: "Basic $new_token", Accept: "application/json"],
-                path: "$prefix/service/siesta/rest/v1/script/$name"
+                path: "$prefix/service/rest/v1/script/$name"
         )
     }
 
@@ -139,6 +139,14 @@ def runScript(String name) {
  * @return script correct for placing in json string file. It cannot be multiline or contain unescaped double quotes
  */
 def getScriptText(String fileName){
+    def defaultEnvs = [
+            'SHATHEL_ENV_NEXUS_S3_BUCKET':"",
+            'SHATHEL_ENV_NEXUS_S3_KEY_ID':"",
+            'SHATHEL_ENV_NEXUS_S3_KEY_SECRET':"",
+            'SHATHEL_ENV_NEXUS_S3_REGION':"",
+            'SHATHEL_ENV_NEXUS_S3_ENDPOINT':""
+
+    ]
     File contextDir = command.description.getStackResources().getComposeFileDirectory()
     assert contextDir != null
     File scriptsDir = new File(contextDir, "scripts")
@@ -146,17 +154,22 @@ def getScriptText(String fileName){
     if (script == null || !script.exists()){
         throw new FileNotFoundException("Script for name $fileName not found in ${contextDir.getAbsolutePath()}")
     } else {
-        String codeWithTemplatesRemoved = TemplateUtils.fillEnvironmentVariables(script.text, envVars)
-        return StringEscapeUtils.escapeJava(codeWithTemplatesRemoved.replace("\n", "; "))
+        String codeWithTemplatesRemoved = TemplateUtils.fillEnvironmentVariables(script.text, defaultEnvs + envVars)
+        return codeWithTemplatesRemoved
+//        return StringEscapeUtils.escapeJava(codeWithTemplatesRemoved.replace("\n", "; "))
     }
 }
 
 
+uploadScript(getScriptText("blob_store.groovy"), "blob_store")
 uploadScript(getScriptText("maven_repository.groovy"), "maven_repository")
+uploadScript(getScriptText("docker_repository.groovy"), "docker_repository")
 uploadScript(getScriptText("security.groovy"), "security")
 uploadScript(getScriptText("changeAdminPassword.groovy"), "changeAdminPassword")
 
 
+runScript("blob_store")
 runScript("maven_repository")
+runScript("docker_repository")
 runScript("security")
 runScript("changeAdminPassword")

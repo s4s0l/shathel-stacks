@@ -12,6 +12,11 @@ import static groovyx.net.http.ContentType.JSON
 import org.s4s0l.shathel.commons.utils.TemplateUtils
 import groovyx.net.http.ContentType;
 
+
+String installName = env['SHATHEL_ENV_NEXUS_INSTALL_NAME'];
+String repoMvnHostedName = "${installName}-mvn-hosted";
+
+
 def log(String x) {
     LOGGER.info(x)
 }
@@ -19,7 +24,7 @@ def log(String x) {
 
 cleanup = {
     LOGGER.info("cleanup...")
-    deleteFile("maven-internal","1.0.0",token)
+    deleteFile(repoMvnHostedName,"1.0.0",token)
 }
 
 def feature(input, test_code,cleanup_closure = cleanup) {
@@ -58,42 +63,42 @@ feature 'anonymous access should be disabled', {
     assert nexus.get(
             contentType: ContentType.TEXT,
             headers: [Accept: "application/xml"],
-            path: "$prefix/repository/maven-internal/org/foo/1.0.0/foo-1.0.0.pom",
+            path: "$prefix/repository/$repoMvnHostedName/org/foo/1.0.0/foo-1.0.0.pom",
     ).status == 401
 }
 
 feature 'admin should be able to query', {
     log "deleting file so the state is deterministic"
-    deleteFile("maven-internal","1.0.0",token)
-    assert getFile("maven-internal","1.0.0",token).status == 404
+    deleteFile(repoMvnHostedName,"1.0.0",token)
+    assert getFile(repoMvnHostedName,"1.0.0",token).status == 404
 }
 
 feature 'admin should be able to upload', {
-    assert uploadFile("maven-internal","1.0.0",token).status == 201
+    assert uploadFile(repoMvnHostedName,"1.0.0",token).status == 201
     log "successfully uploaded file"
-    assert getFile("maven-internal","1.0.0",token).status == 200
+    assert getFile(repoMvnHostedName,"1.0.0",token).status == 200
     log "successfully got file"
 }
 
 feature 'maven-internal should disable overriding artifacts', {
-    assert uploadFile("maven-internal","1.0.0",token).status == 201
-    assert uploadFile("maven-internal","1.0.0",token).status == 400
+    assert uploadFile(repoMvnHostedName,"1.0.0",token).status == 201
+    assert uploadFile(repoMvnHostedName,"1.0.0",token).status == 400
 }
 
 
 feature 'dev should be able to read but not to upload',{
-    assert getFile("maven-internal","1.0.0",token_dev).status == 404
-    assert uploadFile("maven-internal","1.0.0",token_dev).status == 403
-    assert getFile("maven-internal","1.0.0",token_dev).status == 404
+    assert getFile(repoMvnHostedName,"1.0.0",token_dev).status == 404
+    assert uploadFile(repoMvnHostedName,"1.0.0",token_dev).status == 403
+    assert getFile(repoMvnHostedName,"1.0.0",token_dev).status == 404
 }
 
 
 feature 'ci should be able to read and upload but not to delete',{
-    assert getFile("maven-internal","1.0.0",token_ci).status == 404
-    assert uploadFile("maven-internal","1.0.0",token_ci).status == 201
-    assert getFile("maven-internal","1.0.0",token_ci).status == 200
-    assert deleteFile("maven-internal","1.0.0",token_ci).status == 403
-    assert getFile("maven-internal","1.0.0",token_ci).status == 200
+    assert getFile(repoMvnHostedName,"1.0.0",token_ci).status == 404
+    assert uploadFile(repoMvnHostedName,"1.0.0",token_ci).status == 201
+    assert getFile(repoMvnHostedName,"1.0.0",token_ci).status == 200
+    assert deleteFile(repoMvnHostedName,"1.0.0",token_ci).status == 403
+    assert getFile(repoMvnHostedName,"1.0.0",token_ci).status == 200
 }
 
 

@@ -1,20 +1,38 @@
 version: '3'
 services:
   nexus:
-    image: sonatype/nexus3:3.7.1
+    build: ./nexus
     ports:
       - 8082:8081
     volumes:
      - nexus-data:/nexus-data
     deploy:
       labels:
+          org.shathel.fwopener.tcp: "5443:5445"
           com.df.notify: "true"
           com.df.distribute: "true"
-          com.df.ignoreAuthorization: "true"
-          com.df.servicePath: "/nexus/"
-          com.df.addReqHeader: "X-Forwarded-Proto https"
-          com.df.denyHttp: "true"
-          com.df.port: "8081"
+          com.df.ignoreAuthorization.1: "true"
+          com.df.servicePath.1: "/nexus/"
+          com.df.addReqHeader.1: "X-Forwarded-Proto https"
+          com.df.denyHttp.1: "true"
+          com.df.port.1: "8081"
+          com.df.ignoreAuthorization.2: "true"
+          com.df.servicePath.2: "/"
+          com.df.port.2: "5443"
+          com.df.srcPort.2: "5443"
+          com.df.srcHttpsPort.2: "5443"
+
+          com.df.ignoreAuthorization.3: "true"
+          com.df.servicePath.3: "/"
+          com.df.port.3: "5444"
+          com.df.srcPort.3: "5444"
+          com.df.srcHttpsPort.3: "5444"
+
+          com.df.ignoreAuthorization.4: "true"
+          com.df.servicePath.4: "/"
+          com.df.port.4: "5445"
+          com.df.srcPort.4: "5445"
+          com.df.srcHttpsPort.4: "5445"
       resources:
           limits:
             memory: ${SHATHEL_ENV_NEXUS_MEMORY_LIMIT:-1.5gb}
