@@ -1,0 +1,3 @@
+*filter
+-I DOCKER-USER -d 172.18.0.0/16 -p tcp --match multiport --dports {{opener_tcp_ports}} -j RETURN
+COMMIT

@@ -1,0 +1,5 @@
+#!/bin/bash
+[ "$IFACE" == "{{public_if}}" ] || exit 0
+set -e
+/sbin/iptables-restore -n < /etc/iptables/shathel.fwopener.tcp.{{ opener_stack_name }}.rules
+exit 0

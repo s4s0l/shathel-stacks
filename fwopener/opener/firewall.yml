@@ -27,19 +27,43 @@
           file:
             path: /etc/iptables
             state: directory
-        - name: Shathel rules file
+
+
+        - name: Shathel rules file (UDP)
           template:
               src: ./shathel.iptable.rules.j2
               dest: /etc/iptables/shathel.fwopener.{{ opener_stack_name }}.rules
               owner: root
               mode: 0644
           register: rules_command
-        - name: Adding shathel iptables rules applied on startup
+          when: "opener_udp_ports != ''"
+        - name: Adding shathel iptables rules applied on startup (UDP)
           template:
               src: ./shathel.iptable.apply.j2
               dest: /etc/network/if-pre-up.d/shathel-fwopener-{{ opener_stack_name }}-iptables
               owner: root
               mode: 0755
-        - name: Apply rules
+          when: "opener_udp_ports != ''"
+        - name: Apply rules (UDP)
           when: rules_command.changed
           shell: IFACE={{public_if}} /etc/network/if-pre-up.d/shathel-fwopener-{{ opener_stack_name }}-iptables
+
+
+        - name: Shathel rules file (TCP)
+          template:
+            src: ./shathel.iptable.tcp.rules.j2
+            dest: /etc/iptables/shathel.fwopener.tcp.{{ opener_stack_name }}.rules
+            owner: root
+            mode: 0644
+          register: rules_command
+          when: "opener_tcp_ports != ''"
+        - name: Adding shathel iptables rules applied on startup (TCP)
+          template:
+            src: ./shathel.iptable.tcp.apply.j2
+            dest: /etc/network/if-pre-up.d/shathel-fwopener-tcp-{{ opener_stack_name }}-iptables
+            owner: root
+            mode: 0755
+          when: "opener_tcp_ports != ''"
+        - name: Apply rules (TCP)
+          when: rules_command.changed
+          shell: IFACE={{public_if}} /etc/network/if-pre-up.d/shathel-fwopener-tcp-{{ opener_stack_name }}-iptables

@@ -14,5 +14,15 @@ shathel-stack:
             def udps = services.collect {it.split(',') }.flatten().join(",")
 
             println("UDPS to open: $udps")
-            if(!udps.isEmpty())
-              provisioners.addAnsible("opener/firewall.yml", ['opener_stack_name':stack.deployName, 'opener_udp_ports':udps])
+
+            def servicesTcp = compose.yml.services?.findAll {
+                    println ("testing: " + it.value.deploy?.labels)
+                   it.value.deploy?.labels?.find { label -> label.key == 'org.shathel.fwopener.tcp' && label.value != null  && label.value.trim() != ""} != null
+               }.collect { it.value.deploy.labels['org.shathel.fwopener.tcp'] }
+
+            def tcps = servicesTcp.collect {it.split(',') }.flatten().join(",")
+
+            println("TCPS to open: $tcps")
+
+            if(!udps.isEmpty() || !tcps.isEmpty())
+              provisioners.addAnsible("opener/firewall.yml", ['opener_stack_name':stack.deployName, 'opener_udp_ports':udps, 'opener_tcp_ports':tcps])
