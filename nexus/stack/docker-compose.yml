@@ -42,3 +42,5 @@ services:
 
 volumes:
   nexus-data:
+    labels:
+      org.shathel.rexray: 'true'
