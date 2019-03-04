@@ -8,7 +8,7 @@ services:
      - nexus-data:/nexus-data
     deploy:
       labels:
-          org.shathel.fwopener.tcp: "5443:5445"
+          com.df.connectionMode: "http-keep-alive"
           com.df.notify: "true"
           com.df.distribute: "true"
           com.df.ignoreAuthorization.1: "true"
@@ -17,26 +17,25 @@ services:
           com.df.denyHttp.1: "true"
           com.df.port.1: "8081"
 
-          com.df.timeoutServer.2: "720"
+          com.df.timeoutServer.2: "920"
           com.df.ignoreAuthorization.2: "true"
           com.df.servicePath.2: "/"
           com.df.port.2: "5443"
-          com.df.srcPort.2: "5443"
-          com.df.srcHttpsPort.2: "5443"
+          com.df.serviceDomain.2: ${SHATHEL_ENV_NEXUS_DOCKER_HOSTED_DOMAIN}
 
-          com.df.timeoutServer.3: "720"
+          com.df.timeoutServer.3: "920"
           com.df.ignoreAuthorization.3: "true"
           com.df.servicePath.3: "/"
           com.df.port.3: "5444"
-          com.df.srcPort.3: "5444"
-          com.df.srcHttpsPort.3: "5444"
+          com.df.serviceDomain.3: ${SHATHEL_ENV_NEXUS_DOCKER_MIRROR_DOMAIN}
 
-          com.df.timeoutServer.4: "720"
+          com.df.timeoutServer.4: "920"
           com.df.ignoreAuthorization.4: "true"
           com.df.servicePath.4: "/"
           com.df.port.4: "5445"
-          com.df.srcPort.4: "5445"
-          com.df.srcHttpsPort.4: "5445"
+          com.df.serviceDomain.4: ${SHATHEL_ENV_NEXUS_DOCKER_DOMAIN}
+#          com.df.srcPort.4: "5445"
+#          com.df.srcHttpsPort.4: "5445"
       resources:
           limits:
             memory: ${SHATHEL_ENV_NEXUS_MEMORY_LIMIT:-1.5gb}
