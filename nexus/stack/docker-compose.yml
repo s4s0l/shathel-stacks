@@ -16,18 +16,22 @@ services:
           com.df.addReqHeader.1: "X-Forwarded-Proto https"
           com.df.denyHttp.1: "true"
           com.df.port.1: "8081"
+
+          com.df.timeoutServer.2: "180"
           com.df.ignoreAuthorization.2: "true"
           com.df.servicePath.2: "/"
           com.df.port.2: "5443"
           com.df.srcPort.2: "5443"
           com.df.srcHttpsPort.2: "5443"
 
+          com.df.timeoutServer.3: "180"
           com.df.ignoreAuthorization.3: "true"
           com.df.servicePath.3: "/"
           com.df.port.3: "5444"
           com.df.srcPort.3: "5444"
           com.df.srcHttpsPort.3: "5444"
 
+          com.df.timeoutServer.4: "180"
           com.df.ignoreAuthorization.4: "true"
           com.df.servicePath.4: "/"
           com.df.port.4: "5445"
