@@ -1,0 +1,25 @@
+version: 1
+shathel-stack:
+  gav: git@github.com/s4s0l/shathel-stacks:minio:$version
+  deployName: minio
+  mandatoryEnvs:
+    SHATHEL_ENV_MINIO_ACCESS_KEY: minio access key
+    SHATHEL_ENV_MINIO_SECRET_KEY: minio secret key
+  dependencies:
+    git@github.com/s4s0l/shathel-stacks:rexray:$version:
+    git@github.com/s4s0l/shathel-stacks:proxy:$version:
+  post-provisioners:
+    configure:
+      type: groovy    
+  enrichers:
+      addNetwork:
+        target: DEPS
+        inline: >
+          compose.addExternalNetworkAndAttachAllServices("minio_minionet")    
+      addConnectionUrl:
+        target: DEPS
+        inline: |
+          env['MINIO_ENDPOINT_URL']='http://minio:9000'
+          env['MINIO_STACK_REGION']='default'
+          env['MINIO_STACK_HOST']='minio'
+          env['MINIO_STACK_PORT']='9000'          

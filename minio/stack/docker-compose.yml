@@ -1,0 +1,50 @@
+version: '3.4'
+
+
+services:
+ standalone:
+  image: minio/minio
+  command: server /data
+  volumes:
+   - data:/data
+   - config:/root/.minio
+  ports:
+   - "9000:9000"
+  networks:
+    minionet:
+      aliases:
+        - minio
+  environment:
+    MINIO_ACCESS_KEY: ${SHATHEL_ENV_MINIO_ACCESS_KEY}
+    MINIO_SECRET_KEY: ${SHATHEL_ENV_MINIO_SECRET_KEY}
+    MINIO_REGION: ${SHATHEL_ENV_MINIO_DEFAULT_REGION:-default}
+  deploy:
+    endpoint_mode: vip
+    mode: replicated
+    replicas: 1      
+    resources:
+      limits:
+        memory:  ${SHATHEL_ENV_MINIO_MEMORY_LIMIT:-512mb}
+      reservations:
+        memory: ${SHATHEL_ENV_MINIO_MEMORY_LIMIT:-512mb}
+    labels:
+        com.df.notify: "true"
+        com.df.distribute: "true"
+        com.df.ignoreAuthorization: "true" #we can do it as minio is using secrets
+        com.df.servicePath: "/minio/"
+        com.df.reqPathReplace: /
+        com.df.reqPathSearch: /minio/
+        com.df.port: "9000"
+  
+
+volumes:
+  data:
+    labels:
+      org.shathel.rexray: 'true'  
+  config:
+    labels:
+      org.shathel.rexray: 'true'
+
+
+networks:
+  minionet:
