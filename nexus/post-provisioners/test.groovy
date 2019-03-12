@@ -25,7 +25,7 @@ def log(String x) {
 
 cleanup = {
     LOGGER.info("cleanup...")
-    deleteFile(repoMvnHostedName,"1.0.0",token)
+    deleteFile(repoMvnHostedName,"1.0.0-SNAPSHOT",token)
     deleteFile(repoMvnReleaseName,"1.0.0",token)
 }
 
