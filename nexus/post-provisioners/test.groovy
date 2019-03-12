@@ -14,7 +14,7 @@ import groovyx.net.http.ContentType;
 
 
 String installName = env['SHATHEL_ENV_NEXUS_INSTALL_NAME'];
-String repoMvnHostedName = "${installName}-mvn-hosted";
+String repoMvnHostedName = "${installName}-mvn-snapshots";
 
 
 def log(String x) {
