@@ -6,7 +6,8 @@ import org.sonatype.nexus.repository.maven.LayoutPolicy
 def name = "${SHATHEL_ENV_NEXUS_INSTALL_NAME}"
 def storeName = "${name}-store"
 
-def repoMvnHostedName = "${name}-mvn-hosted"
+def repoMvnHostedName = "${name}-mvn-snapshots"
+def repoMvnReleasesName = "${name}-mvn-releases"
 def repoMvnProxy1Name = "${name}-mvn-central-proxy"
 def repoMvnProxy2Name = "${name}-mvn-jcenter-proxy"
 def repoMvnGroupName = "${name}-mvn-group"
@@ -14,6 +15,15 @@ def repoMvnGroupName = "${name}-mvn-group"
 if (!repository.getRepositoryManager().exists(repoMvnHostedName)) {
     repository.createMavenHosted(
             repoMvnHostedName,
+            storeName,
+            true,
+            VersionPolicy.SNAPSHOT,
+            WritePolicy.ALLOW,
+            LayoutPolicy.STRICT);
+}
+if (!repository.getRepositoryManager().exists(repoMvnReleasesName)) {
+    repository.createMavenHosted(
+            repoMvnReleasesName,
             storeName,
             true,
             VersionPolicy.RELEASE,

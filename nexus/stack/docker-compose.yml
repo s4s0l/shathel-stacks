@@ -21,7 +21,7 @@ services:
           com.df.ignoreAuthorization.2: "true"
           com.df.servicePath.2: "/"
           com.df.port.2: "5443"
-          com.df.serviceDomain.2: ${SHATHEL_ENV_NEXUS_DOCKER_HOSTED_DOMAIN}
+          com.df.serviceDomain.2: ${SHATHEL_ENV_NEXUS_DOCKER_SNAPSHOTS_DOMAIN}
 
           com.df.timeoutServer.3: "920"
           com.df.ignoreAuthorization.3: "true"
@@ -34,8 +34,13 @@ services:
           com.df.servicePath.4: "/"
           com.df.port.4: "5445"
           com.df.serviceDomain.4: ${SHATHEL_ENV_NEXUS_DOCKER_DOMAIN}
-#          com.df.srcPort.4: "5445"
-#          com.df.srcHttpsPort.4: "5445"
+
+          com.df.timeoutServer.5: "920"
+          com.df.ignoreAuthorization.5: "true"
+          com.df.servicePath.5: "/"
+          com.df.port.5: "5442"
+          com.df.serviceDomain.5: ${SHATHEL_ENV_NEXUS_DOCKER_RELEASES_DOMAIN}
+
       resources:
           limits:
             memory: ${SHATHEL_ENV_NEXUS_MEMORY_LIMIT:-1.5gb}

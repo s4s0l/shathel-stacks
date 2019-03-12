@@ -6,9 +6,22 @@ import org.sonatype.nexus.repository.maven.LayoutPolicy
 def name = "${SHATHEL_ENV_NEXUS_INSTALL_NAME}"
 def storeName = "${name}-store"
 
-def repoDockerHostedName = "${name}-docker-hosted"
+def repoDockerHostedName = "${name}-docker-snapshots"
+def repoDockerReleasesName = "${name}-docker-releases"
 def repoDockerProxyName = "${name}-docker-hub-proxy"
 def repoDockerGroupName = "${name}-docker-group"
+
+
+if (!repository.getRepositoryManager().exists(repoDockerReleasesName)) {
+    repository.createDockerHosted(
+            repoDockerReleasesName,
+            5442,
+            null,
+            storeName,
+            false,
+            true,
+            WritePolicy.ALLOW_ONCE);
+}
 
 if (!repository.getRepositoryManager().exists(repoDockerHostedName)) {
     repository.createDockerHosted(
@@ -18,7 +31,7 @@ if (!repository.getRepositoryManager().exists(repoDockerHostedName)) {
             storeName,
             false,
             true,
-            WritePolicy.ALLOW_ONCE);
+            WritePolicy.ALLOW);
 }
 
 if (!repository.getRepositoryManager().exists(repoDockerProxyName)) {
@@ -40,7 +53,7 @@ if (!repository.getRepositoryManager().exists(repoDockerGroupName)) {
             repoDockerGroupName,
             5445,
             null,
-            [repoDockerProxyName, repoDockerHostedName],
+            [repoDockerProxyName, repoDockerHostedName, repoDockerReleasesName],
             false,
             storeName);
 }

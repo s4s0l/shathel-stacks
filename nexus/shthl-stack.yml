@@ -15,12 +15,14 @@ shathel-stack:
     SHATHEL_ENV_NEXUS_DEV_MAIL: DEV user deadonly (dev) - mail
     SHATHEL_ENV_NEXUS_CI_PASS: CI user (ci) - password
     SHATHEL_ENV_NEXUS_CI_MAIL: CI user (ci) - mail
-    SHATHEL_ENV_NEXUS_DOCKER_HOSTED_DOMAIN: dns for hosted docker registry
+    SHATHEL_ENV_NEXUS_RELEASE_PASS: CI RELEASE user (release) - password
+    SHATHEL_ENV_NEXUS_RELEASE_MAIL: CI RELEASE user (release) - mail
+    SHATHEL_ENV_NEXUS_DOCKER_SNAPSHOTS_DOMAIN: dns for snapshots docker registry
+    SHATHEL_ENV_NEXUS_DOCKER_RELEASES_DOMAIN: dns for releases docker registry
     SHATHEL_ENV_NEXUS_DOCKER_MIRROR_DOMAIN: dns for docker hub mirror registry
     SHATHEL_ENV_NEXUS_DOCKER_DOMAIN: dns for grouped docker registry
 #    SHATHEL_ENV_NEXUS_ADMIN_OVERRIDE_PASS: Alternative password if starting pass is diff then default one
   dependencies:
-    git@github.com/s4s0l/shathel-stacks:fwopener:0.6.13:
     git@github.com/s4s0l/shathel-stacks:rexray:0.6.13:
     git@github.com/s4s0l/shathel-stacks:proxy:0.6.13:
       optional: true
