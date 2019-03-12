@@ -72,14 +72,14 @@ feature 'anonymous access should be disabled', {
 
 feature 'admin should be able to query', {
     log "deleting file so the state is deterministic"
-    deleteFile(repoMvnHostedName,"1.0.0",token)
-    assert getFile(repoMvnHostedName,"1.0.0",token).status == 404
+    deleteFile(repoMvnHostedName,"1.0.0-SNAPSHOT",token)
+    assert getFile(repoMvnHostedName,"1.0.0-SNAPSHOT",token).status == 404
 }
 
 feature 'admin should be able to upload', {
-    assert uploadFile(repoMvnHostedName,"1.0.0",token).status == 201
+    assert uploadFile(repoMvnHostedName,"1.0.0-SNAPSHOT",token).status == 201
     log "successfully uploaded file"
-    assert getFile(repoMvnHostedName,"1.0.0",token).status == 200
+    assert getFile(repoMvnHostedName,"1.0.0-SNAPSHOT",token).status == 200
     log "successfully got file"
 }
 
@@ -90,18 +90,18 @@ feature 'maven-internal should disable overriding artifacts', {
 
 
 feature 'dev should be able to read but not to upload',{
-    assert getFile(repoMvnHostedName,"1.0.0",token_dev).status == 404
-    assert uploadFile(repoMvnHostedName,"1.0.0",token_dev).status == 403
-    assert getFile(repoMvnHostedName,"1.0.0",token_dev).status == 404
+    assert getFile(repoMvnHostedName,"1.0.0-SNAPSHOT",token_dev).status == 404
+    assert uploadFile(repoMvnHostedName,"1.0.0-SNAPSHOT",token_dev).status == 403
+    assert getFile(repoMvnHostedName,"1.0.0-SNAPSHOT",token_dev).status == 404
 }
 
 
 feature 'ci should be able to read and upload but not to delete',{
-    assert getFile(repoMvnHostedName,"1.0.0",token_ci).status == 404
-    assert uploadFile(repoMvnHostedName,"1.0.0",token_ci).status == 201
-    assert getFile(repoMvnHostedName,"1.0.0",token_ci).status == 200
-    assert deleteFile(repoMvnHostedName,"1.0.0",token_ci).status == 403
-    assert getFile(repoMvnHostedName,"1.0.0",token_ci).status == 200
+    assert getFile(repoMvnHostedName,"1.0.0-SNAPSHOT",token_ci).status == 404
+    assert uploadFile(repoMvnHostedName,"1.0.0-SNAPSHOT",token_ci).status == 201
+    assert getFile(repoMvnHostedName,"1.0.0-SNAPSHOT",token_ci).status == 200
+    assert deleteFile(repoMvnHostedName,"1.0.0-SNAPSHOT",token_ci).status == 403
+    assert getFile(repoMvnHostedName,"1.0.0-SNAPSHOT",token_ci).status == 200
 }
 
 
