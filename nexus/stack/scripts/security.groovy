@@ -27,8 +27,8 @@ def allRepoNames = [repoDockerHostedName,
 def snapshotRepoNames = [repoDockerHostedName].collect { "docker-$it".toString() } +
         [repoMvnHostedName].collect { "maven2-$it".toString() }
 
-def releaseRepoNames = [repoDockerHostedName].collect { "docker-$it".toString() } +
-        [repoMvnHostedName].collect { "maven2-$it".toString() }
+def releaseRepoNames = [repoDockerReleasesName].collect { "docker-$it".toString() } +
+        [repoMvnReleasesName].collect { "maven2-$it".toString() }
 
 
 def usersExist = false
