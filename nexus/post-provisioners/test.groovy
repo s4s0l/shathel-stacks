@@ -15,6 +15,7 @@ import groovyx.net.http.ContentType;
 
 String installName = env['SHATHEL_ENV_NEXUS_INSTALL_NAME'];
 String repoMvnHostedName = "${installName}-mvn-snapshots";
+String repoMvnReleaseName = "${installName}-mvn-releases";
 
 
 def log(String x) {
@@ -25,6 +26,7 @@ def log(String x) {
 cleanup = {
     LOGGER.info("cleanup...")
     deleteFile(repoMvnHostedName,"1.0.0",token)
+    deleteFile(repoMvnReleaseName,"1.0.0",token)
 }
 
 def feature(input, test_code,cleanup_closure = cleanup) {
@@ -54,6 +56,7 @@ envVars = environmentContext.getAsEnvironmentVariables()
 token = Base64.getEncoder().encodeToString(("admin:${envVars.get("SHATHEL_ENV_NEXUS_ADMIN_PASS")}").bytes)
 token_ci = Base64.getEncoder().encodeToString(("ci:${envVars.get("SHATHEL_ENV_NEXUS_CI_PASS")}").bytes)
 token_dev = Base64.getEncoder().encodeToString(("dev:${envVars.get("SHATHEL_ENV_NEXUS_DEV_PASS")}").bytes)
+token_release = Base64.getEncoder().encodeToString(("release:${envVars.get("SHATHEL_ENV_NEXUS_RELEASE_PASS")}").bytes)
 
 
 pomFile = new File(new File(command.description.getStackResources().getComposeFileDirectory(),"test"), "foo.pom")
@@ -81,8 +84,8 @@ feature 'admin should be able to upload', {
 }
 
 feature 'maven-internal should disable overriding artifacts', {
-    assert uploadFile(repoMvnHostedName,"1.0.0",token).status == 201
-    assert uploadFile(repoMvnHostedName,"1.0.0",token).status == 400
+    assert uploadFile(repoMvnReleaseName,"1.0.0",token_release).status == 201
+    assert uploadFile(repoMvnReleaseName,"1.0.0",token_release).status == 400
 }
 
 
