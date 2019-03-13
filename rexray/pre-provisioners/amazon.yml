@@ -1,0 +1,16 @@
+- name: Install "nvme-cli" package
+  apt:
+    name: nvme-cli
+    state: present
+- name: Udev rules
+  copy:
+    src: ./999-aws-ebs-nvme.rules
+    dest:  /etc/udev/rules.d/999-aws-ebs-nvme.rules
+    owner: root
+    mode: 0600
+- name: Udev rules script
+  copy:
+    src: ./ebs-nvme-mapping
+    dest:  /usr/local/bin/ebs-nvme-mapping
+    owner: root
+    mode: 0700

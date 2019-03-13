@@ -6,7 +6,7 @@ import org.sonatype.nexus.repository.maven.LayoutPolicy
 def name = "${SHATHEL_ENV_NEXUS_INSTALL_NAME}"
 def storeName = "${name}-store"
 
-def repoMvnHostedName = "${name}-mvn-snapshots"
+def repoMvnHostedName = "${name}-mvn-dirty"
 def repoMvnReleasesName = "${name}-mvn-releases"
 def repoMvnProxy1Name = "${name}-mvn-central-proxy"
 def repoMvnProxy2Name = "${name}-mvn-jcenter-proxy"
@@ -17,7 +17,7 @@ if (!repository.getRepositoryManager().exists(repoMvnHostedName)) {
             repoMvnHostedName,
             storeName,
             true,
-            VersionPolicy.SNAPSHOT,
+            VersionPolicy.RELEASE,
             WritePolicy.ALLOW,
             LayoutPolicy.STRICT);
 }

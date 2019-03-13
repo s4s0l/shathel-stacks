@@ -21,7 +21,7 @@ services:
           com.df.ignoreAuthorization.2: "true"
           com.df.servicePath.2: "/"
           com.df.port.2: "5443"
-          com.df.serviceDomain.2: ${SHATHEL_ENV_NEXUS_DOCKER_SNAPSHOTS_DOMAIN}
+          com.df.serviceDomain.2: ${SHATHEL_ENV_NEXUS_DOCKER_DIRTY_DOMAIN}
 
           com.df.timeoutServer.3: "920"
           com.df.ignoreAuthorization.3: "true"
@@ -46,7 +46,7 @@ services:
             memory: ${SHATHEL_ENV_NEXUS_MEMORY_LIMIT:-1.5gb}
     environment:
       - NEXUS_CONTEXT=nexus
-      - INSTALL4J_ADD_VM_PARAMS=${SHATHEL_ENV_NEXUS_OPTS:--Xms1524m -Xmx1524m -XX:MaxDirectMemorySize=1600m -Djava.util.prefs.userRoot=/nexus-data/javaprefs}
+      - INSTALL4J_ADD_VM_PARAMS=${SHATHEL_ENV_NEXUS_OPTS:--Xms750m -Xmx750m -XX:MaxDirectMemorySize=1500m -Djava.util.prefs.userRoot=/nexus-data/javaprefs}
 
 volumes:
   nexus-data:

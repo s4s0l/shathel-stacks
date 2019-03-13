@@ -7,6 +7,12 @@
       register: plugin_present
       failed_when: "plugin_present.rc != 1 and plugin_present.rc != 0"
       changed_when: False
+    - name: Amazon OS customizations
+      include: ./amazon.yml
+      static: no
+      when: shathel_env_aws_accesskey is defined
     - shell: "docker plugin install rexray/dobs:0.11.3 DOBS_REGION={{shathel_env_do_region | default('nyc1') }} DOBS_TOKEN={{shathel_env_do_token}} --grant-all-permissions --alias shrex"
       when: "(shathel_env_do_token is defined) and (plugin_present.rc != 0) "
+    - shell: "docker plugin install rexray/ebs:0.11.4 EBS_REGION={{shathel_env_aws_region | default('eu-central-1') }} EBS_ACCESSKEY={{shathel_env_aws_accesskey}} EBS_SECRETKEY={{shathel_env_aws_secretkey}} --grant-all-permissions --alias shrex"
+      when: "(shathel_env_aws_accesskey is defined) and (plugin_present.rc != 0) "
 

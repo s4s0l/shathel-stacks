@@ -6,7 +6,7 @@ import org.sonatype.nexus.repository.maven.LayoutPolicy
 def name = "${SHATHEL_ENV_NEXUS_INSTALL_NAME}"
 def storeName = "${name}-store"
 
-def repoDockerHostedName = "${name}-docker-snapshots"
+def repoDockerHostedName = "${name}-docker-dirty"
 def repoDockerReleasesName = "${name}-docker-releases"
 def repoDockerProxyName = "${name}-docker-hub-proxy"
 def repoDockerGroupName = "${name}-docker-group"

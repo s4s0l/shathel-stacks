@@ -3,12 +3,12 @@ import org.sonatype.nexus.security.user.UserNotFoundException
 
 def name = "${SHATHEL_ENV_NEXUS_INSTALL_NAME}"
 
-def repoDockerHostedName = "${name}-docker-snapshots"
+def repoDockerHostedName = "${name}-docker-dirty"
 def repoDockerReleasesName = "${name}-docker-releases"
 def repoDockerProxyName = "${name}-docker-hub-proxy"
 def repoDockerGroupName = "${name}-docker-group"
 
-def repoMvnHostedName = "${name}-mvn-snapshots"
+def repoMvnHostedName = "${name}-mvn-dirty"
 def repoMvnReleasesName = "${name}-mvn-releases"
 def repoMvnProxy1Name = "${name}-mvn-central-proxy"
 def repoMvnProxy2Name = "${name}-mvn-jcenter-proxy"

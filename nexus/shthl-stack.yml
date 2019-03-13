@@ -17,7 +17,7 @@ shathel-stack:
     SHATHEL_ENV_NEXUS_CI_MAIL: CI user (ci) - mail
     SHATHEL_ENV_NEXUS_RELEASE_PASS: CI RELEASE user (release) - password
     SHATHEL_ENV_NEXUS_RELEASE_MAIL: CI RELEASE user (release) - mail
-    SHATHEL_ENV_NEXUS_DOCKER_SNAPSHOTS_DOMAIN: dns for snapshots docker registry
+    SHATHEL_ENV_NEXUS_DOCKER_DIRTY_DOMAIN: dns for dirty docker registry
     SHATHEL_ENV_NEXUS_DOCKER_RELEASES_DOMAIN: dns for releases docker registry
     SHATHEL_ENV_NEXUS_DOCKER_MIRROR_DOMAIN: dns for docker hub mirror registry
     SHATHEL_ENV_NEXUS_DOCKER_DOMAIN: dns for grouped docker registry
