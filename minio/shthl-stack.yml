@@ -6,8 +6,8 @@ shathel-stack:
     SHATHEL_ENV_MINIO_ACCESS_KEY: minio access key
     SHATHEL_ENV_MINIO_SECRET_KEY: minio secret key
   dependencies:
-    git@github.com/s4s0l/shathel-stacks:rexray:$version:
-    git@github.com/s4s0l/shathel-stacks:proxy:$version:
+    git@github.com/s4s0l/shathel-stacks:rexray:0.6.20:
+    git@github.com/s4s0l/shathel-stacks:proxy:0.6.20:
   post-provisioners:
     configure:
       type: groovy    
