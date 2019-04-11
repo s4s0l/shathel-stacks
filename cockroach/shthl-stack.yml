@@ -3,9 +3,9 @@ shathel-stack:
   gav: git@github.com/s4s0l/shathel-stacks:cockroach:$version
   deployName: cockroach
   dependencies:
-    git@github.com/s4s0l/shathel-stacks:rexray:$version:
-    git@github.com/s4s0l/shathel-stacks:registry:$version:
-    git@github.com/s4s0l/shathel-stacks:proxy:$version:
+    git@github.com/s4s0l/shathel-stacks:rexray:0.6.8:
+    git@github.com/s4s0l/shathel-stacks:registry:0.6.8:
+    git@github.com/s4s0l/shathel-stacks:proxy:0.6.8:
       optional: true
   enrichers:
       addNetwork:
