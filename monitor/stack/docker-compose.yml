@@ -26,9 +26,9 @@ services:
       resources:
         limits:
           cpus: '0.10'
-          memory: ${SHATHEL_ENV_PROMETHEUS_MEMORY_LIMIT:-512mb}
+          memory: ${SHATHEL_ENV_PROMETHEUS_MEMORY_LIMIT:-1024mb}
         reservations:
-          memory: ${SHATHEL_ENV_PROMETHEUS_MEMORY_LIMIT:-512mb}
+          memory: ${SHATHEL_ENV_PROMETHEUS_MEMORY_LIMIT:-1024mb}
 
 #  mon-alert-manager:
 #    image: vfarcic/alert-manager:slack
@@ -52,6 +52,13 @@ services:
     - DF_NOTIFY_CREATE_SERVICE_URL=http://monitor:8080/v1/docker-flow-monitor/reconfigure
     - DF_NOTIFY_REMOVE_SERVICE_URL=http://monitor:8080/v1/docker-flow-monitor/remove
     - DF_INCLUDE_NODE_IP_INFO=true
+    healthcheck:
+#      health check replaced as default in dockerfile has too restrictive timeout
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/v1/docker-flow-swarm-listener/ping"]
+      interval: 30s
+      timeout: 25s
+      retries: 3
+      start_period: 10s
     deploy:
       resources:
         limits:
