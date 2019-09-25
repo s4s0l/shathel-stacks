@@ -8,6 +8,8 @@ services:
      - nexus-data:/nexus-data
     deploy:
       labels:
+          com.df.setResHeader: "www-authenticate Basic\\ realm=\\\"Sonatype\\ Nexus\\ Repository\\ Manager\\\" if { res.hdr(www-authenticate) -m found }"
+
           com.df.connectionMode: "http-keep-alive"
           com.df.notify: "true"
           com.df.distribute: "true"
